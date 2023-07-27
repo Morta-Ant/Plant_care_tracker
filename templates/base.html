@@ -1,0 +1,39 @@
+<!--This is the html template which contains the common elements appearing on different pages on the website -->
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title> {% block title %} {% endblock %}</title>
+    {% block head %}
+    {% endblock %}
+
+  </head>
+
+  <body>
+     <style>
+      .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      font-size: small;
+      }
+    
+</style>
+
+    {% block style %}{% endblock %}
+    
+    <div class = "logo">
+      <img src="{{url_for('static', filename = 'placeholder_logo.png')}}" class = "logo">
+    </div>
+
+    <div class="content">{% block content %}{% endblock %}</div>
+
+    <footer class = "footer">
+        <p> By: Cynthia Karimi, Emoefe Oweibo, Heather Embleton, Jaqueline Arcangelo, Morta Antanaviciute </p>
+    </footer>
+
+  </body>
+</html>
