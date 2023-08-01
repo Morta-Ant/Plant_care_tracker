@@ -111,12 +111,3 @@ def delete_plant_collection(user_id, plant_id):
 		if connector:
 			connector.close()
 
-
-
-
-
-
-
-
-
-
