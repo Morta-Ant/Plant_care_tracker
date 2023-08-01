@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{common_name}}{% endblock %}
+{% block style %}
+<style>
+    ul {
+        list-style-type: none;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <h1>{{common_name}}</h1>
+
+    <div><img src="{{image}}" width="450" class="image"/></div>
+    <div>{{description}}
+        <ul>
+            <li>Common name: {{common_name}}</li>
+            <li>Scientific name: {{scientific_name}}</li>
+            <li>Watering frequecy: {{wateringRequirements}}, {{watering_period}} </li>
+            <li>Growth rate: {{growth_rate}}</li>
+            <li>Light requirement: {{sunlight}}</li>
+    
+        </ul>
+    </div>
+    
+
+{% endblock %}{{desc}}

@@ -4,7 +4,7 @@ import json
 app = Flask(__name__)
 
 # plant care data
-with open("plantcare.json") as plants_care:
+with open("api/plantcare.json") as plants_care:
     plants_care_data = json.load(plants_care)
 
 
@@ -54,4 +54,4 @@ def search_plant_name(plant_name, plants_care_data):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=3000, debug=True)

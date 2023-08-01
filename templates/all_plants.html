@@ -1,15 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}All Plants{% endblock %}
 {% block content %}
-    <h1>This is the page listing all plants available on our website</h1>
+    <h1>Find Your Plant!</h1>
 
-    <div>search bar</div>
+    <div class ="searchbar">
+      <form action="/search">
+        <input type="text" placeholder="Search.." name="search">
+        <button type="submit">Submit</button>
+      </form>
+    </div>
     <div>filter options</div>
     
-    <ul>
-        <li>Plant 1</li>
-        <li>Plant 2</li>
-        <li>Plant 3 </li>
-
-    </ul>
+    <div class = "plants">
+        {% for plant in data %}
+        <img src="{{plant['image']}}" width="250" height="250" class = "image"/>  <br>
+        <a href="/plants/{{plant['_id']}}"> {{plant["common_name"]}}</a> <br>
+  </div>
+  {% endfor %}
 {% endblock %}
