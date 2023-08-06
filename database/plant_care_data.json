@@ -1,9 +1,4 @@
-#2-3 times week = 2 days
-#7 days = 7 days
-#7-14 days = 10 days
-#14-21 days = 17 days
-
-plant_data = [
+[
   {
     "plant_id": 1,
     "common_name": "Snake Plant",
