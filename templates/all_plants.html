@@ -64,7 +64,8 @@ p {
           <img src="{{plant['image']}}" class = "image"/> <br>
         <a href="/plants/{{plant['_id']}}"> {{plant["common_name"]}} </a> <br>
         <p>{{plant['scientific_name']}}</p>
-
+        </div>
+        {% endfor %}
     </div>
-  {% endfor %}
+  
 {% endblock %}
