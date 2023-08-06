@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import json, requests, re
+from database.crud_plants import DbConnectionError
 
 
 app = Flask(__name__)
@@ -27,7 +28,7 @@ def one_plant(id):
     except requests.exceptions.JSONDecodeError:
         return "Oops! Something went wrong :("
 
-#search page: should be pulling from the database
+#search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
@@ -90,6 +91,19 @@ def user_collection():
 @app.route("/<user>/collection/<id>")
 def user_plant(id):
     pass
+
+#currently search searches the json file, should pull from database via plant-care-api
+def search_data(query):
+    results = []
+    with open("database/plant_care_data.json") as plant_data:
+        data = json.load(plant_data)
+    for item in data:
+        # Convert all string values in the dictionary to lowercase and check for the query.
+        if any(str(value).lower().count(query.lower()) > 0 for value in item.values()):
+            results.append(item)
+    return results
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
