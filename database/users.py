@@ -1,5 +1,5 @@
 import mysql.connector
-from config import USER, PASSWORD, HOST
+from database.config import USER, PASSWORD, HOST, DATABASE
 import bcrypt
 
 class DbConnectionError(Exception):
@@ -17,7 +17,7 @@ def _connect_to_db(db_name):
 
 def get_all_records():
     try:
-        db_name = 'plantregister'  # update as required
+        db_name = DATABASE  # update as required
         db_connection = _connect_to_db(db_name)
         cur = db_connection.cursor()
         print("Connected to DB: %s" % db_name)
@@ -45,24 +45,19 @@ record = {
     'lastname': 'Smart',
     'email': 'Lsmart@gmail.com',
     'passwd': 'password123',
-     
    
 }
 
 
 def insert_new_record(record):
     try:
-        db_name = 'plantregister'
+        db_name = DATABASE
         db_connection = _connect_to_db(db_name)
         cur = db_connection.cursor()
         print("Connected to DB: %s" % db_name)
         hashed_passwd = bcrypt.hashpw(record['passwd'].encode('utf-8'), bcrypt.gensalt())
         query = """INSERT INTO users ({}) VALUES (%s, %s, %s, %s)""".format(', '.join(record.keys()))
         values = (record['firstname'], record['lastname'], record['email'], hashed_passwd)
-
-
-
-
 
         #query = """INSERT INTO users ({}) VALUES ('{}', '{}', '{}', '{}')""".format(
          #   ', '.join(record.keys()),
@@ -87,6 +82,7 @@ def insert_new_record(record):
             print("DB connection is closed")
 
     print("Record added to DB")
+
 def main():
     get_all_records()
     # get_all_records_for_rep('Morgan')

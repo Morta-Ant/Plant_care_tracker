@@ -1,5 +1,5 @@
 #replace with your own credentials
 USER = 'root'
-PASSWORD = 'password'
+PASSWORD = 'Password'
 HOST = '127.0.0.1'
-DATABASE="PlantsDB"
+DATABASE="DBName"
