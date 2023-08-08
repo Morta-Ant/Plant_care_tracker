@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request
-import json
-import requests
-from users import insert_new_record, DbConnectionError
-import re
+import json, requests, re
+from database.users import insert_new_record, DbConnectionError
+
 
 
 app = Flask(__name__)
@@ -136,7 +135,6 @@ def search_data(query):
         if any(str(value).lower().count(query.lower()) > 0 for value in item.values()):
             results.append(item)
     return results
-
 
 
 if __name__ == '__main__':
