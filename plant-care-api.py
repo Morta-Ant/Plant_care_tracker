@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
-from database.crud_plant_collection import get_all_plant_collections, get_plant_collection_by_ids,get_plant_collection_by_user,create_plant_collection,update_plant_collection,delete_plant_collection
+from database.crud_plant_collection import get_plant_collection_by_ids,get_plant_collection_by_user,create_plant_collection,update_plant_collection,delete_plant_collection
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -20,12 +20,24 @@ def get_plants_endpoint():
     all_plants = get_all_plants()
     return jsonify(all_plants)
 
-
 # API Route for a single plant data based on the id
-@app.route('/api/plants/<int:id>', methods=["GET"])
-def get_plant_by_id_endpoint(id):
-    plant_by_id = get_plant_by_id(id)
-    return jsonify(plant_by_id)
+
+class PlantNotFoundError(Exception):
+    def __init__(self, plant_id):
+        self.plant_id = plant_id
+        self.message = f"Plant with ID {plant_id} has not been found."
+        
+@app.route('/api/plants/<int:plant_id>', methods=["GET"])
+def get_plant_by_id_endpoint(plant_id):
+    try:
+        plant_by_id = get_plant_by_id(plant_id)
+        if plant_by_id is None:
+            raise PlantNotFoundError(plant_id)
+        else:
+            return jsonify(plant_by_id)
+    except PlantNotFoundError as e:
+        return jsonify({"Error": e.message})
+
 
 
 # API Route for a single plant data based on the plant name
@@ -51,15 +63,59 @@ def add_plant_to_collection_endpoint():
     create_plant_collection(plant_collection_data)
     return jsonify({"message": "Plant collection data added successfully."})
 
+# API route to update last care and upcoming care date for specific plant and specific user
+@app.route('/api/collection/care', methods=["PUT"])
+def update_care():
+    plant_to_update = request.get_json()
+    required_fields = ['user_id', 'plant_id', 'last_care']
+    for field in required_fields:
+        if field not in  plant_to_update:
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+    
+    last_care_date = plant_to_update['last_care']
+    plant = get_plant_by_id( plant_to_update['plant_id'])
+    care_frequency = plant['watering_frequency']
+    upcoming_care_date = get_next_care_date(last_care_date, care_frequency)
+    plant_to_update['upcoming_care'] = upcoming_care_date
+    update_plant_collection( plant_to_update)
+    return jsonify({"message": "Plant collection data has been updated successfully"})
+
 # API route to get plant collection for a specific user
+@app.route('/api/collection/<int:user_id>', methods=["GET"])
+def get_plant_collection_by_user_endpoint(user_id):
+    user_plant_collection = get_plant_collection_by_user(user_id)
+    return jsonify(user_plant_collection)
+
 
 # API route to get a specific plant from plant collection for a specific user
-
-# API route to update last care and upcoming care date for specific plant and specific user
+@app.route('/api/collection/<int:user_id>/<int:plant_id>/', methods=["GET"])
+def get_plant_collection_by_ids_endpoint(user_id, plant_id):
+    single_user_plant= get_plant_collection_by_ids(user_id, plant_id)
+    return jsonify(single_user_plant)
 
 # API route to delete specific plant from plant-collection table for a specific user
+class PlantDeletionError(Exception):
+     def __init__(self, plant_id):
+        self.plant_id = plant_id
+        self.message = f"oops we are not able delete plant with ID {plant_id} from the collection."
 
 
+
+@app.route('/api/collection/<int:user_id>/<int:plant_id>/', methods=["DELETE"])
+def delete_plant_from_collection_endpoint(user_id, plant_id):
+    try:
+
+        check_plant_exists = get_plant_collection_by_ids(user_id,plant_id)
+
+        if check_plant_exists is None:
+            raise PlantNotFoundError(plant_id)
+        else:
+            delete_plant = delete_plant_collection(user_id, plant_id)
+            removed_plant = get_plant_by_id(plant_id)
+            return jsonify({"message": f"The following plant {removed_plant['common_name']} with id {plant_id} has been deleted from plant collection.", "deleted": delete_plant}), 200
+        
+    except (PlantDeletionError, PlantNotFoundError) as e:
+        return jsonify({"Error": e.message})
 
 
 
