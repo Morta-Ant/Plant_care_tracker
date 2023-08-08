@@ -3,7 +3,6 @@ USE PlantsDB;
 
 CREATE TABLE users (
   user_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  username VARCHAR(255) NOT NULL UNIQUE,
   firstname VARCHAR(255) NOT NULL,
   lastname VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL
@@ -36,7 +35,6 @@ ALTER TABLE plant_collection ADD FOREIGN KEY (user_id) REFERENCES users (user_id
 -- To display the plant collection of each user as well as upcoming care action.
 SELECT 
     u.user_id, 
-    u.username,
     u.email,
     (
         SELECT CONCAT('[', GROUP_CONCAT(JSON_OBJECT('common_name', p.common_name, 'upcoming_care', pc.upcoming_care)), ']')
