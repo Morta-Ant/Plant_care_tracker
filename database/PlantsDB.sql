@@ -3,7 +3,9 @@ USE PlantsDB;
 
 CREATE TABLE users (
   user_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  username VARCHAR(255) NOT NULL,
+  username VARCHAR(255) NOT NULL UNIQUE,
+  firstname VARCHAR(255) NOT NULL,
+  lastname VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL
 );
 
@@ -43,3 +45,7 @@ SELECT
         WHERE pc.user_id = u.user_id
     ) AS plants
 FROM users u;
+
+
+
+

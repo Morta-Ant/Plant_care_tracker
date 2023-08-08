@@ -1,11 +1,10 @@
 import mysql.connector
-from config import USER, PASSWORD, HOST
-dbname='plantregister'
+from database.config import USER, PASSWORD, HOST, DATABASE
 
 class DbConnectionError(Exception):
     pass
 
-def _connect_to_db(dbname):
+def _connect_to_db():
     # Code to connect to a mysql database, uses the auth details
     # in config.py
     connectDB = mysql.connector.connect(
@@ -13,6 +12,6 @@ def _connect_to_db(dbname):
         password=PASSWORD,
         host=HOST,
         auth_plugin='mysql_native_password',
-        database=dbname
+        database=DATABASE
     )
     return connectDB
