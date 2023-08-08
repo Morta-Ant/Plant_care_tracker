@@ -1,57 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Website</title>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block style %}
     <style>
-        /* Header styles */
-        header {
-            background-color: #333;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #fff;
-        }
-
-        /* Logo styles */
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        /* Navigation bar styles */
-        nav {
-            display: flex;
-        }
-
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-        }
-
-        /* Search bar styles */
-        .search-bar {
-            display: flex;
-            align-items: center;
-        }
-
-        .search-bar input[type="text"] {
-            padding: 5px 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .search-bar button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-left: 5px;
-            cursor: pointer;
-        }
-
+       
         /* Image thumbnail styles */
         .images-container {
             display: flex;
@@ -106,47 +57,10 @@
             color: #333; /* Set your preferred font color */
         }
 
-        /* Footer styles */
-        footer {
-            background-color: #333;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #fff;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-        }
-
     </style>
+    {% endblock %}
 
-</head>
-
-<body>
-    <header>
-        <!-- Logo on the left -->
-        <div class="logo">Insert Logo</div>
-
-        <!-- Navigation bar at the top -->
-        <nav>
-            <a href="/">Index</a>
-            <a href="#">All Plants</a>
-            <a href="#">Individual Plants</a>
-            <a href="#">Collection</a>
-            <a href="{{url_for('signup')}}">Sign Up</a>
-            <a href="login">Login</a>
-        </nav>
-
-        <!-- Search bar on the right -->
-        <div class="search-bar">
-            <input type="text" placeholder="Search...">
-            <button>Search</button>
-        </div>
-    </header>
-
-    <main>
+    {% block content %}
         <!--   images thumbnails -->
         <div class="images-container">
             <div class="thumbnail">
@@ -164,10 +78,4 @@
             <h2>Plant Care</h2>
             <p>Find out all your plant care in one place.</p>
         </div>
-    </main>
-
-    <footer>
-        <div>Footer content</div>
-    </footer>
-</body>
-</html>
+    {% endblock %}

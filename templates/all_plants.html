@@ -1,20 +1,71 @@
 {% extends "base.html" %}
 {% block title %}All Plants{% endblock %}
+{% block style %}
+<style>
+          
+  form {
+     margin: 0 auto;
+     text-align: center;
+     background-color: #eee;
+     padding: 20px;
+     border-radius: 5px;
+   }
+   input[type="text"] {
+     width: 70%;
+     padding: 12px 20px;
+     margin: 8px 0;
+     box-sizing: border-box;
+     border: 2px solid #ccc;
+     border-radius: 4px;
+   }
+   button[type="submit"] {
+     width: 20%;
+     background-color: #B9F6CA;
+     color: white;
+     padding: 14px 20px;
+     margin: 8px 0;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+   }
+   button[type="submit"]:hover {
+     background-color: #008B8B;
+   }
+
+   .grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+}
+
+h1 {
+  text-align: center;
+}
+
+p {
+  font-style: italic;
+  font-size: small;
+}
+ </style>
+ {% endblock %}
+
 {% block content %}
     <h1>Find Your Plant!</h1>
 
     <div class ="searchbar">
-      <form action="/search">
-        <input type="text" placeholder="Search.." name="search">
-        <button type="submit">Submit</button>
+      <form action="/search" method="post">
+        <input type="text" name="search_query" placeholder="Enter search query">
+        <input type="submit" value="Search">
       </form>
     </div>
-    <div>filter options</div>
     
-    <div class = "plants">
+    <div class="grid-container">
         {% for plant in data %}
-        <img src="{{plant['image']}}" width="250" height="250" class = "image"/>  <br>
-        <a href="/plants/{{plant['_id']}}"> {{plant["common_name"]}}</a> <br>
-  </div>
-  {% endfor %}
+        <div class="thumbnail">
+          <img src="{{plant['image']}}" class = "image"/> <br>
+        <a href="/plants/{{plant['_id']}}"> {{plant["common_name"]}} </a> <br>
+        <p>{{plant['scientific_name']}}</p>
+        </div>
+        {% endfor %}
+    </div>
+  
 {% endblock %}

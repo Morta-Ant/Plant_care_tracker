@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 flask = "*"
+requests = "*"
+mysql-connector-python = "*"
+bcrypt = "*"
 
 [dev-packages]
 

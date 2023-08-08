@@ -1,5 +1,5 @@
 import mysql.connector
-from config import HOST, USER, PASSWORD, DATABASE
+from database.config import HOST, USER, PASSWORD, DATABASE
 
 class DbConnectionError(Exception):
     pass
