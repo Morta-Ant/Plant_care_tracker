@@ -1,9 +1,12 @@
-from flask import Flask, render_template, request
-import json, requests, re
-from database.users import insert_new_record, DbConnectionError
-from database.crud_users import create_user
+from flask import Flask, render_template, request, session, redirect, url_for
+import json, requests, re, bcrypt
+from database.users import insert_new_record, DbConnectionError, get_user_by_email
+from database.config import SECRET_KEY
+from database.crud_plant_collection import get_plants_in_user_collection
 
 app = Flask(__name__)
+app.secret_key = SECRET_KEY
+
 
 # index page
 @app.route("/")
@@ -82,12 +85,42 @@ def signup():
 #login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-     return render_template('login.html')
+    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+        email = request.form['email']
+        password = request.form['password']
+        user = get_user_by_email(email)
+        # user format: (1, 'Name', 'Surname', 'email@email.com', '$2b$12$ewLJwOyJmENA3qyDBjchBe.Ceq9jJNNVGxC..uMPFrvhX7mBdZzHm')
+        password_db = user[4]
+        is_password_correct = bcrypt.checkpw(password.encode("utf-8"), password_db.encode("utf-8"))
+        print(password, password_db)
+        if is_password_correct:
+            session['loggedin'] = True
+            session['id'] = user[0]
+            session['email'] = user[3]
+            return render_template('home.html')
+        else:
+            msg = 'Incorrect username or password!'
+    return render_template("login.html")
+
+
+#logout
+@app.route("/logout")
+def logout():
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('email', None)
+    return redirect(url_for('index'))
+
 
 #user collection
-@app.route("/<user>/collection")
+@app.route("/collection")
 def user_collection():
-    pass
+    if "loggedin" in session:
+        user_plants = get_plants_in_user_collection(session["id"])
+
+        return render_template("collection.html", data = user_plants)
+    else:
+        return redirect(url_for("login"))
 
 #individual plant within user's collection
 @app.route("/<user>/collection/<id>")
@@ -108,5 +141,6 @@ def search_data(query):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
     
 
