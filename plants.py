@@ -91,8 +91,8 @@ def login():
         user = get_user_by_email(email)
         # user format: (1, 'Name', 'Surname', 'email@email.com', '$2b$12$ewLJwOyJmENA3qyDBjchBe.Ceq9jJNNVGxC..uMPFrvhX7mBdZzHm')
         password_db = user[4]
+        # checking if passwords match
         is_password_correct = bcrypt.checkpw(password.encode("utf-8"), password_db.encode("utf-8"))
-        print(password, password_db)
         if is_password_correct:
             session['loggedin'] = True
             session['id'] = user[0]
