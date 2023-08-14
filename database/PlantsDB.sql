@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS PlantsDB;
 CREATE DATABASE PlantsDB;
 USE PlantsDB;
 
@@ -45,22 +44,6 @@ SELECT
         WHERE pc.user_id = u.user_id
     ) AS plants
 FROM users u;
-
-select * from users;
-insert into plant_collection
-(user_id, plant_id, last_care, upcoming_care)
-values
-(1, 1, null, null),
-(1, 2, null, null);
-
-select * from plant_collection;
-select * from plants;
-
-# get list of plants in user collection
-SELECT pc.plant_id, p.common_name, p.scientific_name, pc.upcoming_care, p.image FROM plant_collection pc
-LEFT JOIN plants p 
-ON p.plant_id = pc.plant_id
-WHERE user_id = 1;
 
 
 
