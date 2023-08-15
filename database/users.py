@@ -1,24 +1,11 @@
-import mysql.connector
-from database.config import USER, PASSWORD, HOST, DATABASE
 import bcrypt
-
-class DbConnectionError(Exception):
-    pass
-
-def _connect_to_db(db_name):
-    cnx = mysql.connector.connect(  
-        host=HOST,
-        user=USER,
-        password=PASSWORD,
-        auth_plugin='mysql_native_password',
-        database=db_name
-    )
-    return cnx
+from database.config import DATABASE
+from database.database_connect import get_connector, DbConnectionError
 
 def get_all_records():
     try:
         db_name = DATABASE  # update as required
-        db_connection = _connect_to_db(db_name)
+        db_connection = get_connector()
         cur = db_connection.cursor()
         print("Connected to DB: %s" % db_name)
 
@@ -49,9 +36,10 @@ record = {
 }
 
 def get_user_by_email(email):
-    db_name = DATABASE  # update as required
-    db_connection = _connect_to_db(db_name)
+    db_name = DATABASE
+    db_connection = get_connector()
     cur = db_connection.cursor()
+    print("Connected to DB: %s" % db_name)
     query = f"SELECT * FROM users WHERE email = {'email'}"
     cur.execute(query)
     row = cur.fetchone()
@@ -61,7 +49,7 @@ def get_user_by_email(email):
 def insert_new_record(record):
     try:
         db_name = DATABASE
-        db_connection = _connect_to_db(db_name)
+        db_connection = get_connector()
         cur = db_connection.cursor()
         print("Connected to DB: %s" % db_name)
         hashed_passwd = bcrypt.hashpw(record['passwd'].encode('utf-8'), bcrypt.gensalt())
