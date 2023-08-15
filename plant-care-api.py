@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
-from database.crud_plant_collection import get_plant_collection_by_ids,get_plant_collection_by_user,create_plant_collection,update_plant_collection,delete_plant_collection
+from database.crud_plant_collection import get_plant_collection_by_ids,create_plant_collection,update_plant_collection,delete_plant_collection
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
