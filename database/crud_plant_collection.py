@@ -37,7 +37,6 @@ def get_plants_in_user_collection(user_id):
 				LEFT JOIN plants p 
 				ON p.plant_id = pc.plant_id
 				WHERE user_id = {user_id}"""
-	print(sql)
 	connector = get_connector()
 	cursor = connector.cursor(dictionary=True)
 	cursor.execute(sql)
