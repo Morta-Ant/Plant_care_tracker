@@ -48,6 +48,15 @@ record = {
    
 }
 
+def get_user_by_email(email):
+    db_name = DATABASE  # update as required
+    db_connection = _connect_to_db(db_name)
+    cur = db_connection.cursor()
+    query = f"SELECT * FROM users WHERE email = {'email'}"
+    cur.execute(query)
+    row = cur.fetchone()
+    return row
+
 
 def insert_new_record(record):
     try:

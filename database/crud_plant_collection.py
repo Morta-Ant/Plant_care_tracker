@@ -44,22 +44,20 @@ def get_plant_collection_by_ids(user_id, plant_id):
 	finally:
 		if connector:
 			connector.close()
+
+def get_plants_in_user_collection(user_id):
+	sql = f"""SELECT pc.plant_id, pc.upcoming_care, p.common_name, p.scientific_name, p.image FROM plant_collection pc
+				LEFT JOIN plants p 
+				ON p.plant_id = pc.plant_id
+				WHERE user_id = {user_id}"""
+	print(sql)
+	connector = get_connector()
+	cursor = connector.cursor(dictionary=True)
+	cursor.execute(sql)
+	result = cursor.fetchall()
+	cursor.close()
+	return result
 			
-def get_plant_collection_by_user(user_id):
-	try:
-		sql = "SELECT u.user_id,  u.username, u.email, (SELECT CONCAT('[', GROUP_CONCAT(JSON_OBJECT('common_name', p.common_name, 'upcoming_care', pc.upcoming_care)), ']') FROM plant_collection pc INNER JOIN plants p ON pc.plant_id = p.plant_id WHERE pc.user_id = u.user_id) AS plants FROM users u WHERE u.user_id = %s"
-		val = (user_id, )
-		connector = get_connector()
-		cursor = connector.cursor(dictionary=True)
-		cursor.execute(sql, val)
-		result = cursor.fetchmany()
-		cursor.close()
-		return result
-	except Exception:
-		raise DbConnectionError("Failed to read data from DB")
-	finally:
-		if connector:
-			connector.close()
 
 def create_plant_collection(plant_collection):
 	try:
