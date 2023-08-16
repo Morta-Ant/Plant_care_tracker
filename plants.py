@@ -116,8 +116,7 @@ def logout():
 @app.route("/collection")
 def user_collection():
     if "loggedin" in session:
-        user_plants = get_plants_in_user_collection(session["id"])
-
+        user_plants = requests.get(f"http://127.0.0.1:3000/api/collection/{session['id']}").json()
         return render_template("collection.html", data = user_plants)
     else:
         return redirect(url_for("login"))
