@@ -1,0 +1,191 @@
+<!--This is the html template which contains the common elements appearing on different pages on the website -->
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> {% block title %} {% endblock %}</title>
+
+    {% block head %}{% endblock %}
+
+  <style>
+    /* Header styles */
+    header {
+        background-color: #333;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+    }
+
+    /* Logo styles */
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    /* Navigation bar styles */
+    nav {
+        display: flex;
+    }
+
+    nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 10px 20px;
+    }
+
+    /* Search bar styles */
+  .search-bar {
+            display: flex;
+            align-items: center;
+        }
+
+  .search-bar input[type="text"] {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+  .search-bar button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+    /* Image thumbnail styles */
+    .images-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start; /* Align images to the left */
+    }
+
+    .thumbnail {
+    border: 20px solid #3A8F6FDE;
+    border-radius: 5px;
+    padding: 35px;
+    max-width: 800px;
+    margin: 0 50px 50px 0;
+    text-align: center;
+    background-color: white;
+    }
+
+    .thumbnail img {
+        width: 200px; /* Set your desired thumbnail size */
+        height: 200px; /* Set your desired thumbnail size */
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+  /* Text box styles */
+    .text-box {
+        border: 20px solid #3A8F6FDE;
+        border-radius: 5px;
+        padding: 35px;
+        max-width: 800px; /* Adjust the width as needed */
+        margin: 0 50px 50px 0; /* Add right and bottom margin to move it to the left */
+        text-align: center;
+        background-colour: white;
+    }
+
+    h2 {
+        color: #000000;
+        font-size: 50px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 20px;
+        line-height: 1.6;
+    }
+
+ body {
+    background-image: url("https://images.pexels.com/photos/1470171/pexels-photo-1470171.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: #333;
+    width: 100vw; /* Set the width to match the viewport width */
+    height: 100vh; /* Set the height to match the viewport height */
+}
+
+body.all_plants_page {
+background-repeat: repeat;
+}
+
+
+
+    /* Footer styles */
+    footer {
+        background-color: #333;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+        position: relative;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        font-style: italic;
+        font-size: small;
+    }
+
+    </style>
+    {% block style %}{% endblock %}
+</head>
+
+  <body>
+
+    <header>
+      <!-- Logo on the left -->
+      <div class="logo"><img src="{{url_for('static', filename = 'placeholder_logo.png')}}" class = "logo"></div>
+
+      <!-- Navigation bar at the top -->
+      {% if session["loggedin"] == True %}
+
+        <nav>
+            <a href="/">Index</a>
+            <a href="/plants">All Plants</a>
+            <a href="/collection">Collection</a>
+            <a href="/logout">Logout</a>
+         </nav>
+
+    {% else %}
+
+    <nav>
+        <a href="/">Index</a>
+        <a href="/plants">All Plants</a>
+        <a href="/collection">Collection</a>
+        <a href="/signup">Sign Up</a>
+        <a href="/login">Login</a>
+     </nav>
+
+
+    {% endif %}
+
+
+      <!-- Search bar on the right -->
+      <div class="search-bar">
+          <input type="text" placeholder="Search...">
+          <button>Search</button>
+      </div>
+  </header>
+
+    <div class="content">{% block content %}{% endblock %}</div>
+
+    <footer class = "footer">
+        <p> By: Cynthia Karimi, Emoefe Oweibo, Heather Embleton, Jaqueline Arcangelo, Morta Antanaviciute </p>
+    </footer>
+
+  </body>
+</html>
