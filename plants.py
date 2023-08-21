@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-import json, requests, re, bcrypt, mysql.connector, datetime as dt
+import json, requests, re, bcrypt, datetime as dt
 from database.users import insert_new_record, DbConnectionError, get_user_by_email
-from database.config import SECRET_KEY, USER, PASSWORD, HOST, DATABASE
+from database.config import SECRET_KEY
 from database.crud_plant_collection import get_plants_in_user_collection
 
 app = Flask(__name__)
@@ -12,7 +12,6 @@ app.secret_key = SECRET_KEY
 @app.route("/")
 def index():
     return render_template("home.html")
-
 
 # all plants page
 @app.route("/plants")
@@ -32,7 +31,7 @@ def one_plant(id):
     except requests.exceptions.JSONDecodeError:
         return "Oops! Something went wrong :("
 
-# search
+#search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
@@ -127,7 +126,7 @@ def user_collection():
 def user_plant(id):
     pass
 
-# currently search searches the json file, should pull from database via plant-care-api
+#currently search searches the json file, should pull from database via plant-care-api
 def search_data(query):
     results = []
     with open("database/plant_care_data.json") as plant_data:
@@ -138,10 +137,10 @@ def search_data(query):
             results.append(item)
     return results
 
-# @app.route("/", methods=["GET", "POST"])
+#weather api search bar
 def get_weather(city):
     open_weather = "http://api.openweathermap.org/data/2.5/weather?"
-    api_key = '****'
+    api_key = '***'
 
     url = open_weather + "appid=" + api_key + "&q=" + city
 
@@ -178,4 +177,6 @@ def weather_app():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+    
 
