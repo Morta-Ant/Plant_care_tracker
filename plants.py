@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import json, requests, re, bcrypt
-from database.users import insert_new_record, DbConnectionError, get_user_by_email
+from database.crud_users import create_user, DbConnectionError, get_user_by_email
 from database.config import SECRET_KEY
 from database.crud_plant_collection import get_plants_in_user_collection
 
@@ -65,7 +65,6 @@ def signup():
         elif password != password2:
             error = 'Passwords must match'
         else:
-            
             user = {
                 'firstname': firstname,
                 'lastname': lastname,
@@ -74,7 +73,7 @@ def signup():
             }
 
             try:
-                insert_new_record(user)
+                create_user(user)
                 success_msg = 'You have successfully registered!'
             except DbConnectionError:
                 error = 'Failed to register due to a database connection error'
@@ -90,13 +89,13 @@ def login():
         password = request.form['password']
         user = get_user_by_email(email)
         # user format: (1, 'Name', 'Surname', 'email@email.com', '$2b$12$ewLJwOyJmENA3qyDBjchBe.Ceq9jJNNVGxC..uMPFrvhX7mBdZzHm')
-        password_db = user[4]
+        password_db = user['passwd']
         # checking if passwords match
         is_password_correct = bcrypt.checkpw(password.encode("utf-8"), password_db.encode("utf-8"))
         if is_password_correct:
             session['loggedin'] = True
-            session['id'] = user[0]
-            session['email'] = user[3]
+            session['id'] = user['user_id']
+            session['email'] = user['email']
             return render_template('home.html')
         else:
             msg = 'Incorrect username or password!'

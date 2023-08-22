@@ -33,6 +33,8 @@ CREATE TABLE plant_collection (
 ALTER TABLE plant_collection ADD FOREIGN KEY (plant_id) REFERENCES plants (plant_id);
 ALTER TABLE plant_collection ADD FOREIGN KEY (user_id) REFERENCES users (user_id);
 
+CREATE UNIQUE INDEX idx_user_email ON users (email);
+
 -- To display the plant collection of each user as well as upcoming care action.
 SELECT 
     u.user_id, 
@@ -44,9 +46,4 @@ SELECT
         WHERE pc.user_id = u.user_id
     ) AS plants
 FROM users u;
-
-
-
-
-
 
