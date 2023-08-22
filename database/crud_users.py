@@ -1,17 +1,4 @@
-import mysql.connector
-from database.config import HOST, USER, PASSWORD, DATABASE
-
-class DbConnectionError(Exception):
-    pass
-
-def get_connector():
-	connector = mysql.connector.connect(
-		host=HOST,
-		user=USER,
-		password=PASSWORD,
-		database=DATABASE
-	)
-	return connector
+from database.database_connect import get_connector, DbConnectionError
 
 def get_all_users():
 	connector = get_connector()

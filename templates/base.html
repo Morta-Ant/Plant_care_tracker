@@ -3,6 +3,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title> {% block title %} {% endblock %}</title>
 
@@ -138,19 +139,38 @@
       <div class="logo"><img src="{{url_for('static', filename = 'placeholder_logo.png')}}" class = "logo"></div>
 
       <!-- Navigation bar at the top -->
-      <nav>
-          <a href="/">Index</a>
-          <a href="/plants">All Plants</a>
-          <a href="#">Collection</a>
-          <a href="/signup">Sign Up</a>
-          <a href="/login">Login</a>
-      </nav>
+      {% if session["loggedin"] == True %}
 
-      <!-- Search bar on the right -->
-      <div class="search-bar">
-          <input type="text" placeholder="Search...">
-          <button>Search</button>
-      </div>
+        <nav>
+            <a href="/">Index</a>
+            <a href="/plants">All Plants</a>
+            <a href="/collection">Collection</a>
+            <a href="/logout">Logout</a>
+         </nav>
+
+    {% else %}
+
+    <nav>
+        <a href="/">Index</a>
+        <a href="/plants">All Plants</a>
+        <a href="/collection">Collection</a>
+        <a href="/signup">Sign Up</a>
+        <a href="/login">Login</a>
+     </nav>
+
+
+    {% endif %}
+
+<!--weather search bar-->
+<form method="POST">
+        <input type="text" name="city" placeholder="Enter city">
+        <button type="submit">Local Weather</button>
+    </form>
+    {% if weather_info %}
+    <div>
+        <p>{{ weather_info }}</p>
+    </div>
+    {% endif %}
   </header>
 
     <div class="content">{% block content %}{% endblock %}</div>
