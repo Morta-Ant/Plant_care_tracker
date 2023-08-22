@@ -1,22 +1,23 @@
-from flask import Flask, render_template, redirect, session, request, url_for,g
+from flask import Flask, render_template, redirect, session, request, url_for
 import json, re, bcrypt, requests, datetime as dt
 from database.crud_users import create_user, get_user_by_email
 from database.database_connect import DbConnectionError
-from database.crud_users import create_user,get_user_by_id
+from database.crud_users import create_user
 from database.config import SECRET_KEY
-from database.crud_plants import get_all_plants, get_plant_by_id
+from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
 from database.crud_plant_collection import add_plant_to_collection, get_plants_in_user_collection
-from flask_login import current_user, LoginManager
+from flask_login import LoginManager
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 login_manager = LoginManager
 
+#index page
 @app.route("/")
 def index():
     return render_template("home.html")
 
-
+# all plants page
 @app.route("/plants")
 def plants():
     try:
@@ -24,7 +25,8 @@ def plants():
         return render_template("all_plants.html", data=plant_data)
     except Exception as e:
         return f"Oops! Something went wrong: {e}"
-    
+
+#individual plant pages    
 @app.route("/plants/<int:id>")
 def one_plant(id):
     try:
@@ -37,15 +39,13 @@ def one_plant(id):
         return f"Oops! Something went wrong: {e}"
  
 
-#pages for individual plants
-
-#search
+#plant search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
         query = request.form['search_query']
-        results = search_data(query)
-        return render_template('search_results.html', results=results)
+        results = get_plant_by_name(query)
+        return render_template('search_results.html', results = results)
     else:
         return "Invalid request method. Please use the search bar to submit a query."
     

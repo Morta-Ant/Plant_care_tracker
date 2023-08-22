@@ -1,28 +1,19 @@
-{% extends "base.html" %}
-{% block title %}Search Results{% endblock %}
-
+{% extends "base.html" %} 
+{% block title %}Search Results{% endblock %} 
 
 {% block content %}
-    <h1>Search Results</h1>
-    {% if results %}
-        <ul>
-            {% for result in results %}
-                <li>
-                    <h2>{{ result['common_name'] }}</h2>
-                    <p>Scientific Name: {{ result['scientific_name'] }}</p>
-                    <p>Other Name: {{ result['other_name'] }}</p>
-                    <p>Light Level: {{ result['light_level'] }}</p>
-                    <p>Watering Frequency: {{ result['watering_frequency'] }}</p>
-                    <p>Growth Rate: {{ result['growth_rate'] }}</p>
-                    <p>Maintenance Level: {{ result['maintenance_level'] }}</p>
-                    <p>Plant Description: {{ result['plant_description'] }}</p>
-                    <!-- Add more fields here as needed -->
-                    <img src="{{ result['image'] }}" alt="{{ result['common_name'] }}">
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No results found.</p>
-    {% endif %}
+<h1>Search Results</h1>
+{% if results %} 
+<div class="grid-container">
+    {% for result in results %}
+    <div class="thumbnail">
+        <img src="{{result['image']}}" class = "image"/> <br>
+        <a href="/plants/{{result['plant_id']}}"> {{result["common_name"]}} </a> <br>
+        <p class = "sc_name">{{result['scientific_name']}}</p>
+    </div>
+  {% endfor %}
+</div>
+{% else %}
+<p>No results found.</p>
+{% endif %} 
 {% endblock %}
-

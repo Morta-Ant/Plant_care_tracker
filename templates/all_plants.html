@@ -32,19 +32,10 @@
      background-color: #008B8B;
    }
 
-   .grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-}
-
 h1 {
   text-align: center;
 }
 
-p {
-  font-style: italic;
-  font-size: small;
-}
  </style>
  {% endblock %}
 
@@ -63,7 +54,7 @@ p {
         <div class="thumbnail">
           <img src="{{plant['image']}}" class = "image"/> <br>
         <a href="/plants/{{plant['plant_id']}}"> {{plant["common_name"]}} </a> <br>
-        <p>{{plant['scientific_name']}}</p>
+        <p class="sc_name">{{plant['scientific_name']}}</p>
         </div>
         {% endfor %}
     </div>
