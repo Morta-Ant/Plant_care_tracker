@@ -161,12 +161,16 @@
 
     {% endif %}
 
-
-      <!-- Search bar on the right -->
-      <div class="search-bar">
-          <input type="text" placeholder="Search...">
-          <button>Search</button>
-      </div>
+<!--weather search bar-->
+<form method="POST">
+        <input type="text" name="city" placeholder="Enter city">
+        <button type="submit">Local Weather</button>
+    </form>
+    {% if weather_info %}
+    <div>
+        <p>{{ weather_info }}</p>
+    </div>
+    {% endif %}
   </header>
 
     <div class="content">{% block content %}{% endblock %}</div>
