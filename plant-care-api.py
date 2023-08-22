@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
 from database.crud_plant_collection import get_plant_in_collection_by_id ,add_plant_to_collection,update_plant_in_collection,delete_plant_from_collection, get_plants_in_user_collection
 from datetime import datetime, timedelta
+from utils.get_next_care_date import get_next_care_date
 
 app = Flask(__name__)
 
@@ -121,20 +122,7 @@ def delete_plant_from_collection_endpoint(user_id, plant_id):
         return jsonify({"Error": e.message})
 
 
-def get_next_care_date(last_care_date, care_frequency):
-     
-     # If current_upcoming care time is yesterday or None we can assign it to last_care date
-     
-     # Convert the last_care_date string to a datetime object
-        last_care_datetime = datetime.strptime(last_care_date, '%Y-%m-%d %H:%M:%S')
-    
-    # Calculate the upcoming care date by adding care_frequency days to last_care_datetime
-        upcoming_care_datetime = last_care_datetime + timedelta(care_frequency)
 
-    # Convert the upcoming_care_datetime back to a formatted string
-        next_care_date = upcoming_care_datetime.strftime('%Y-%m-%d %H:%M:%S')
-
-        return next_care_date
 
 if __name__ == '__main__':
     app.run(port=3000, debug=True)
