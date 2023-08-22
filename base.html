@@ -67,13 +67,10 @@
     }
 
     .thumbnail {
-    border: 20px solid #3A8F6FDE;
-    border-radius: 5px;
-    padding: 35px;
-    max-width: 800px;
-    margin: 0 50px 50px 0;
-    text-align: center;
-    background-color: white;
+        border: 20px solid #3A8F6FDE;
+        border-radius: 5px;
+        margin: 20px;
+        padding: 15px;
     }
 
     .thumbnail img {
@@ -83,7 +80,7 @@
         border-radius: 10px;
     }
 
-  /* Text box styles */
+    /* Text box styles */
     .text-box {
         border: 20px solid #3A8F6FDE;
         border-radius: 5px;
@@ -91,7 +88,6 @@
         max-width: 800px; /* Adjust the width as needed */
         margin: 0 50px 50px 0; /* Add right and bottom margin to move it to the left */
         text-align: center;
-        background-colour: white;
     }
 
     h2 {
@@ -105,24 +101,16 @@
         line-height: 1.6;
     }
 
- body {
-    background-image: url("https://images.pexels.com/photos/1470171/pexels-photo-1470171.jpeg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    color: #333;
-    width: 100vw; /* Set the width to match the viewport width */
-    height: 100vh; /* Set the height to match the viewport height */
-}
-
-body.all_plants_page {
-background-repeat: repeat;
-}
-
-
+    body {
+        background-image: url("https://images.pexels.com/photos/1470171/pexels-photo-1470171.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif; /* Set your preferred font-family */
+        color: #333; /* Set your preferred font color */
+    }
 
     /* Footer styles */
     footer {
@@ -173,12 +161,16 @@ background-repeat: repeat;
 
     {% endif %}
 
-
-      <!-- Search bar on the right -->
-      <div class="search-bar">
-          <input type="text" placeholder="Search...">
-          <button>Search</button>
-      </div>
+<!--weather search bar-->
+<form method="POST">
+        <input type="text" name="city" placeholder="Enter city">
+        <button type="submit">Local Weather</button>
+    </form>
+    {% if weather_info %}
+    <div>
+        <p>{{ weather_info }}</p>
+    </div>
+    {% endif %}
   </header>
 
     <div class="content">{% block content %}{% endblock %}</div>
