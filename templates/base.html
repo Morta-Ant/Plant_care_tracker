@@ -138,13 +138,52 @@
       <div class="logo"><img src="{{url_for('static', filename = 'placeholder_logo.png')}}" class = "logo"></div>
 
       <!-- Navigation bar at the top -->
+      {% if session["loggedin"] == True %}
       <nav>
-          <a href="/">Index</a>
-          <a href="/plants">All Plants</a>
-          <a href="#">Collection</a>
-          <a href="/signup">Sign Up</a>
-          <a href="/login">Login</a>
-      </nav>
+        <a href="/">Index</a>
+        <a href="/plants">All Plants</a>
+        <a href="/collection">Collection</a>
+        <a href="/logout">Logout</a>
+     </nav>
+
+    {% else %}
+
+    <nav>
+      {% if error%}
+      <p>{{error}}</p>
+      {% else %}
+      <a href="/">Index</a>
+      <a href="/plants">All Plants</a>
+      <a href="/collection">Collection</a>
+      <a href="/signup">Sign Up</a>
+      <a href="/login">Login</a>
+      {% endif %}
+      {% if error %}
+        <div class="alert alert-danger">
+           {{error}}
+        </div>
+      {% endif %}
+    </nav>
+  {% endif %}
+  {% if session['loggedin'] %}
+        <h5>Welcome, {{session['firstname'] }}</h5>
+  {% endif %} 
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-danger">
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+
+</nav>
 
       <!-- Search bar on the right -->
       <div class="search-bar">

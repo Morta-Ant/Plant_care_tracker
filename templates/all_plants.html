@@ -30,7 +30,11 @@
    }
    button[type="submit"]:hover {
      background-color: #008B8B;
+    
    }
+   .bttn {background-color: #B9F6CA;
+    border: none;
+  } 
 
    .grid-container {
     display: grid;
@@ -57,15 +61,20 @@ p {
         <input type="submit" value="Search">
       </form>
     </div>
-    
-    <div class="grid-container">
+   
+   <div class="grid-container">
         {% for plant in data %}
         <div class="thumbnail">
           <img src="{{plant['image']}}" class = "image"/> <br>
-        <a href="/plants/{{plant['plant_id']}}"> {{plant["common_name"]}} </a> <br>
+        <p> {{plant["common_name"]}} </p> <br>
         <p>{{plant['scientific_name']}}</p>
+        <form action="/add_to_collection" method="POST">
+        <input type="hidden" name="plant_id" value="{{ plant['plant_id'] }}">
+        <input type="submit" class="bttn" value="Add to Collection" />
+      </form>
         </div>
         {% endfor %}
     </div>
   
 {% endblock %}
+

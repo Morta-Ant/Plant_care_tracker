@@ -39,7 +39,7 @@ def get_user_by_id(id):
 		cursor.close()
 		return result
 	except Exception:
-		raise DbConnectionError("Failed to read data from DB")
+		raise DbConnectionError("Failed to read data from DB, CRUD-User")
 	finally:
 		if connector:
 			connector.close()
