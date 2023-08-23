@@ -131,7 +131,7 @@ def collection():
         return render_template("collection.html", data = user_plants)
     return redirect(url_for("login"))
 
-
+#add to collection
 @app.route("/add_to_collection", methods=["POST"])
 def add_to_collection():
     print(session)
@@ -154,27 +154,6 @@ def add_to_collection():
     except Exception as e:
         return f"Failed to add plant to collection: {e}"
     
-
-#user collection
-@app.route("/<user>/collection")
-def user_collection():
-    pass
-
-#individual plant within user's collection
-@app.route("/<user>/collection/<id>")
-def user_plant(id):
-    pass
-
-#currently search searches the json file, should pull from database via plant-care-api
-def search_data(query):
-    results = []
-    with open("database/plant_care_data.json") as plant_data:
-        data = json.load(plant_data)
-    for item in data:
-        # Convert all string values in the dictionary to lowercase and check for the query.
-        if any(str(value).lower().count(query.lower()) > 0 for value in item.values()):
-            results.append(item)
-    return results
 
 @app.route("/add_test_data", methods=["GET"])
 def add_test_data():
@@ -221,16 +200,14 @@ def get_weather(city):
     ]
 
     return weather_info
-
-@app.route("/", methods=["GET", "POST"])
+#get weather info
+@app.route("/weather", methods=["POST"])
 def weather_app():
     if request.method == "POST":
         city = request.form["city"]
         weather_info = get_weather(city)
         return render_template("weather_results.html", weather_info=weather_info)
-    return render_template("weather_form.html")
 
-    
 if __name__ == '__main__':
     app.run(debug=True)
     

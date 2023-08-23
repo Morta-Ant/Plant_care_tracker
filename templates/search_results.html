@@ -1,19 +1,18 @@
 {% extends "base.html" %} 
 {% block title %}Search Results{% endblock %} 
-
 {% block content %}
 <h1>Search Results</h1>
-{% if results %} 
+{% if results %}
 <div class="grid-container">
-    {% for result in results %}
-    <div class="thumbnail">
-        <img src="{{result['image']}}" class = "image"/> <br>
-        <a href="/plants/{{result['plant_id']}}"> {{result["common_name"]}} </a> <br>
-        <p class = "sc_name">{{result['scientific_name']}}</p>
-    </div>
+  {% for result in results %}
+  <div class="thumbnail">
+    <img src="{{ result['image'] }}" class="image" /> <br />
+    <a href="/plants/{{ result['plant_id'] }}"> {{ result['common_name'] }} </a>
+    <br />
+    <p class="sc_name">{{ result['scientific_name'] }}</p>
+  </div>
   {% endfor %}
 </div>
 {% else %}
 <p>No results found.</p>
-{% endif %} 
-{% endblock %}
+{% endif %} {% endblock %}

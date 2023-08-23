@@ -50,28 +50,6 @@ footer {
   font-size: small;
 }
 
-/* weather search bar*/
-.search-bar {
-  display: flex;
-  align-items: center;
-}
-
-.search-bar input[type='text'] {
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.search-bar button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  margin-left: 5px;
-  cursor: pointer;
-}
-
 /* Image thumbnail styles*/
 .images-container {
   display: flex;
@@ -124,17 +102,31 @@ p {
   line-height: 1.6;
 }
 
-ul {
-  list-style-type: none;
-}
-
 .sc_name {
   font-size: small;
+  font-style: italic;
 }
 
-/* Plants search*/
+/*Single Plant pages*/
 
-.w_form {
+.plant {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  padding-bottom: 20%;
+}
+
+.plant_text_box {
+  border: none;
+  padding: 35px;
+  max-width: 500px;
+  margin: 0 50px 50px 0;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.7);
+}
+/*Plant Search */
+
+.plants_form {
   margin: 0 auto;
   text-align: center;
   background-color: #eee;
@@ -142,7 +134,7 @@ ul {
   border-radius: 5px;
 }
 
-input[type='text'] {
+.plants_input {
   width: 70%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -151,17 +143,49 @@ input[type='text'] {
   border-radius: 4px;
 }
 
-.w_button[type='submit'] {
-  width: 20%;
-  background-color: #b9f6ca;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+/* weather search bar*/
+.search_city {
+  display: flex;
+  align-items: center;
 }
 
-.w_button[type='submit']:hover {
-  background-color: #008b8b;
+.input_city {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.button_city {
+  background-color: #3a8f6fde;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  position: relative;
+  top: 16px;
+}
+
+.label_city {
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+  line-height: 2;
+}
+
+/*Singup and Login*/
+label {
+  display: flex;
+  flex-direction: column;
+  line-height: 2;
+}
+
+.user_form_button {
+  background-color: #3a8f6fde;
+  color: #fff;
+  padding: 5px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
 }
