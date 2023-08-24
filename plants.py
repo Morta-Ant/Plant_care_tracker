@@ -5,9 +5,10 @@ from database.database_connect import DbConnectionError
 from database.crud_users import create_user
 from database.config import SECRET_KEY
 from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
-from database.crud_plant_collection import add_plant_to_collection, get_plants_in_user_collection
+from database.crud_plant_collection import add_plant_to_collection, get_plants_data_in_user_collection, get_user_collection, update_plant_in_collection
 from flask_login import LoginManager
 from utils.weather import WeatherInfo, DaylightInfo, get_weather_data
+from utils.get_next_care_date import is_next_care_date_up_to_date, get_next_care_date
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
@@ -126,7 +127,21 @@ def logout():
 @app.route("/collection")
 def collection():
     if "loggedin" in session:
-        user_plants = get_plants_in_user_collection(session["id"])
+        user_collection = get_user_collection(session["id"])
+        # Check if any care dates need updating        
+        for entry in user_collection:
+            if not is_next_care_date_up_to_date(entry["upcoming_care"]):
+                updated_collection_entry = {}
+                updated_collection_entry["user_id"] = session["id"]
+                updated_collection_entry["plant_id"] = entry["plant_id"]
+                updated_collection_entry["last_care"] = entry["upcoming_care"]
+                watering_frequency = get_plant_by_id(entry["plant_id"])["watering_frequency"]
+                new_upcoming_care = get_next_care_date(entry["upcoming_care"], watering_frequency)
+                updated_collection_entry["upcoming_care"] = new_upcoming_care
+                update_plant_in_collection(updated_collection_entry)
+
+        user_plants = get_plants_data_in_user_collection(session["id"])
+        print(user_plants)
         return render_template("collection.html", data = user_plants)
     return redirect(url_for("login"))
 
@@ -158,7 +173,7 @@ def add_to_collection():
 def add_test_data():
     test_plant_collection = {
         "user_id": 1,
-        "plant_id": 123,
+        "plant_id": 9,
         "last_care": "2023-08-16",
         "upcoming_care": "2023-08-23"
     }

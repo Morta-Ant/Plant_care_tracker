@@ -16,7 +16,7 @@ def get_all_plant_collections():
 		if connector:
 			connector.close()
 
-def get_plant_in_collection_by_id(user_id, plant_id):
+def get_plant_in_collection_by_ids(user_id, plant_id):
 	try:
 		sql = "SELECT * FROM plant_collection WHERE user_id = %s AND plant_id = %s"
 		val = (user_id, plant_id)
@@ -32,7 +32,7 @@ def get_plant_in_collection_by_id(user_id, plant_id):
 		if connector:
 			connector.close()
 
-def get_plants_in_user_collection(user_id):
+def get_plants_data_in_user_collection(user_id):
 	sql = f"""SELECT pc.user_id, pc.plant_id, pc.upcoming_care, p.common_name, p.scientific_name, p.image FROM plant_collection pc
 				LEFT JOIN plants p 
 				ON p.plant_id = pc.plant_id
@@ -43,7 +43,15 @@ def get_plants_in_user_collection(user_id):
 	result = cursor.fetchall()
 	cursor.close()
 	return result
-			
+
+def get_user_collection(user_id):
+	sql = f"SELECT * from plant_collection WHERE user_id = {user_id}"
+	connector = get_connector()	
+	cursor = connector.cursor(dictionary=True)
+	cursor.execute(sql)
+	result = cursor.fetchall()
+	cursor.close()
+	return result	
 
 def add_plant_to_collection(plant_collection):
 	try:
@@ -94,4 +102,6 @@ def delete_plant_from_collection(user_id, plant_id):
 			cursor.close()
 		if connector:
 			connector.close()
+
+
 
