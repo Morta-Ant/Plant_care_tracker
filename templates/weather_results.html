@@ -1,5 +1,16 @@
+{% extends "base.html" %} 
+{% block title %}Plant Care and Weather{% endblock %} 
+{% block content %}
 <ul>
-    {% for info in weather_info %}
-    <li>{{ info }}</li>
-    {% endfor %}
+    <li>Weather in {{city}}: {{weather_info.details}}</li>
+    <li>{{weather_info.get_advice_by_weather_type()}}</li>
+    <li>Temperature: {{weather_info.temp}}&deg;C</li>
+    <li>{{weather_info.get_advice_by_temp()}}</li>
+    <li>Humidity: {{weather_info.humidity}}%</li>
+    <li>{{weather_info.get_advice_by_humidity()}}</li>
+    <li>Sunrise: {{daylight_info.format_sunrise()}}</li>
+    <li>Sunset: {{daylight_info.format_sunset()}}</li>
+    <li>Daylight time: {{daylight_info.format_daylight()}}</li>
+    <li>{{daylight_info.get_advice_by_daylight_time()}}</li>
 </ul>
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, session, request, url_for
-import json, re, bcrypt, requests, datetime as dt
+import re, bcrypt
 from database.crud_users import create_user, get_user_by_email
 from database.database_connect import DbConnectionError
 from database.crud_users import create_user
@@ -7,6 +7,7 @@ from database.config import SECRET_KEY
 from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
 from database.crud_plant_collection import add_plant_to_collection, get_plants_in_user_collection
 from flask_login import LoginManager
+from utils.weather import WeatherInfo, DaylightInfo, get_weather_data
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
@@ -172,41 +173,15 @@ def add_test_data():
     except Exception as e:
         return f"Failed to add test data to collection: {e}"
 
-#weather api search bar
-def get_weather(city):
-    open_weather = "http://api.openweathermap.org/data/2.5/weather?"
-    api_key = '****'
-
-    url = open_weather + "appid=" + api_key + "&q=" + city
-
-    response = requests.get(url).json()
-
-    temp_kelvin = response['main']['temp']
-    temp_celsius = temp_kelvin - 273.15
-    temp_fahrenheit = temp_celsius * (9 / 5) + 32
-    feels_like_kelvin = response['main']['feels_like']
-    feels_like_celsius = feels_like_kelvin - 273.15
-    feels_like_fahrenheit = feels_like_celsius * (9 / 5) + 32
-    description = response['weather'][0]['description']
-    sunrise_time = dt.datetime.utcfromtimestamp(response['sys']['sunrise'] + response['timezone'])
-    sunset_time = dt.datetime.utcfromtimestamp(response['sys']['sunset'] + response['timezone'])
-
-    weather_info = [
-        f"Temperature in {city}: {temp_celsius:.2f}C or {temp_fahrenheit:.2f}F",
-        f"Temperature in {city} feels like {feels_like_celsius:.2f}C or {feels_like_fahrenheit:.2f}F",
-        f"General Weather in {city}: {description}",
-        f"Sun Rises in {city} at {sunrise_time} local time.",
-        f"Sun Sets in {city} at {sunset_time} local time."
-    ]
-
-    return weather_info
 #get weather info
 @app.route("/weather", methods=["POST"])
 def weather_app():
     if request.method == "POST":
         city = request.form["city"]
-        weather_info = get_weather(city)
-        return render_template("weather_results.html", weather_info=weather_info)
+        weather_data = get_weather_data(city)
+        weather_info = WeatherInfo(weather_data)
+        daylight_info = DaylightInfo(weather_data)
+        return render_template("weather_results.html", city = city, weather_info = weather_info, daylight_info = daylight_info)
 
 if __name__ == '__main__':
     app.run(debug=True)
