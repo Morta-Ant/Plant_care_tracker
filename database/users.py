@@ -66,28 +66,7 @@ def get_user_by_email(email):
     return row
 
 
-# def create_plant_collection(plants_rec):
-#     try:
-#         db_name = DATABASE
-#         db_connection = _connect_to_db(db_name)
-#         cur = db_connection.cursor()
-#         print("Connected to DB: %s" % db_name)
-#         query = """INSERT INTO plant_collection ({}) VALUES (%s, %s, %s, %s)""".format(', '.join(plants_rec.keys()))
-#         values = (plants_rec['user_id'],plants_rec['plant_id'], plants_rec['last_care'],plants_rec['upcoming_care'])
-#         cur.execute(query,values)
-#         #cur.execute(query)
-#         db_connection.commit()  # VERY IMPORTANT, otherwise, rows would not be added or reflected in the DB!
-#         cur.close()
 
-#     except Exception:
-#         raise DbConnectionError("Failed to read data from DB")
-
-#     finally:
-#         if db_connection:
-#             db_connection.close()
-#             print("DB connection is closed")
-
-#     print("Record added to DB")
                 
 def insert_new_record(record):
     try:

@@ -1,10 +1,13 @@
 from flask import Flask, render_template, redirect, session, request, url_for,g,flash
-import json, re, bcrypt
-from database.users import insert_new_record, DbConnectionError, get_user_by_email
+import json, re, bcrypt, requests, datetime as dt
+from database.crud_users import create_user, get_user_by_email
+from database.database_connect import DbConnectionError
 from database.crud_users import create_user,get_user_by_id
 from database.config import SECRET_KEY
-from database.crud_plants import get_all_plants,get_plant_by_id,get_plant_by_name,get_connector
-from database.crud_plant_collection import create_plant_collection,get_all_plant_collections
+from database.crud_plants import get_all_plants, get_plant_by_id
+from database.crud_plant_collection import add_plant_to_collection,get_all_plant_collections
+from database.crud_plant_collection import get_plants_in_user_collection,create_plant_collection
+
 from flask_login import current_user, LoginManager
 from datetime import datetime,timedelta
 
@@ -73,7 +76,6 @@ def signup():
         elif password != password2:
             error = 'Passwords must match'
         else:
-            
             user = {
                 'firstname': firstname,
                 'lastname': lastname,
@@ -82,7 +84,7 @@ def signup():
             }
 
             try:
-                insert_new_record(user)
+                create_user(user)
                 success_msg = 'You have successfully registered!'
             except DbConnectionError:
                 error = 'Failed to register due to a database connection error'
@@ -94,14 +96,14 @@ def signup():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
-    success_msg = None
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         password = request.form['password']
         user = get_user_by_email(email)
-        # checking if passwords match
+        # user format: (1, 'Name', 'Surname', 'email@email.com', '$2b$12$ewLJwOyJmENA3qyDBjchBe.Ceq9jJNNVGxC..uMPFrvhX7mBdZzHm')
         if user is not None:  # Check if user exists
-          is_password_correct = bcrypt.checkpw(password.encode("utf-8"), user['passwd'].encode("utf-8")) #password_db.encode("utf-8"))
+          passwordDB = user['passwd']
+          is_password_correct = bcrypt.checkpw(password.encode("utf-8"), passwordDB.encode("utf-8"))
           if is_password_correct:
              session['loggedin'] = True
              session['id'] = user['user_id']
@@ -109,7 +111,11 @@ def login():
              session['email'] = user['email']
              session['firstname']=user['firstname']
              success_msg="You are now logged in"
+
              return redirect(url_for('collection'),success_msg)
+
+        
+
           else:
                 error = 'Incorrect username or password, Please try again!'
         else:
@@ -124,6 +130,7 @@ def logout():
     session.pop('id', None)
     session.pop('email', None)
     return redirect(url_for('index'))
+
 
 # Python code to pre-process the data
 
@@ -153,35 +160,7 @@ def collection():
     except Exception as e:
         return f"Oops! Something went wrong: {e}"
 
-# Add a new route to display an individual user's plant collection
-# @app.route("/collection/<int:user_id>/<int:plant_id>")
-# def user_collection(user_id, plant_id):
-#     try:
-#         if "loggedin" in session:
-#             user_plant_collection = get_plant_collection_by_ids(user_id, plant_id)
 
-#             return render_template("user_collection.html", collection=user_plant_collection)
-#     except Exception as e:
-#         return f"Oops! Something went wrong: {e}"
-
-
-
-# @app.route("/collection")
-# def collection():
-#   try:
-#     if "loggedin" in session:
-#         user_plants =get_all_plant_collections()
-#         plant_data = get_all_plants()
-#         print("Calling get_all_plant_collections()")
-#         print("This is the data",user_plants)#data returned is none how to get data
-#         print("Data in collection route:", user_plants)
-#         #user_plants = requests.get(f"http://127.0.0.1:3000/api/collection/{session['id']}").json()
-#         return render_template("collection.html", data = user_plants,plant_data=plant_data)
-     
-#   except Exception as e:
-#         return f"Oops! Something went wrong: {e}"
-#########ADD to Collection
-#@app.route("/plants/<int:id>"
 def plants():
     try:
         plant_data = get_all_plants()  # Call your function to get plant data from the database
@@ -189,13 +168,21 @@ def plants():
     except Exception as e:
         return f"Oops! Something went wrong: {e}"
 
+#collection There are ARE TWO COLLECTION FUNCTIONS
+# @app.route("/collection")
+# def collection():
+#     if "loggedin" in session:
+#         user_plants = get_plants_in_user_collection(session["id"])
+#         return render_template("collection.html", data = user_plants)
+#     return redirect(url_for("login"))
 
 @app.route("/add_to_collection", methods=["POST"])
 def add_to_collection():
+    error = None
     # Check if the user is logged in
     if not session.get('loggedin'):
-        return "You need to log in to add plants to your collection."
-
+        flash("You need to log in to add plants to your collection.")
+        return redirect(url_for('index'))
     # Get the user_id from the session
     user_id = session.get('id')
 
@@ -213,8 +200,10 @@ def add_to_collection():
             "upcoming_care": datetime.now() + timedelta(days=7),  # Set this to the current datetime plus 7 days
         }
 
+
         # Call the create_plant_collection function to insert the record into the database
         created_collection = create_plant_collection(plant_collection)
+
 
         if created_collection:
             return redirect(url_for('collection'))  # Redirect to the collection page
@@ -255,36 +244,51 @@ def add_test_data():
         "upcoming_care": "2023-08-23"
     }
     try:
-        created_collection = create_plant_collection(test_plant_collection)
+        created_collection = add_plant_to_collection(test_plant_collection)
         if created_collection:
             return "Test data added to collection"
         else:
             return "Failed to add test data to collection"
     except Exception as e:
         return f"Failed to add test data to collection: {e}"
-    
-# http://localhost:5000/profile - this will be the profile page, only accessible for logged in users
-@app.route('/profile')
-def profile():
-    # Check if the user is logged in
-    if 'loggedin' in session:
-        # Get the user ID from the session
-        user_id = session.get('id')
-        
-        # Retrieve user information by their ID
-        user = get_user_by_id(user_id)
-        
-        # Check if the user exists
-        if user:
-            return render_template('profile.html', user=user)
-        else:
-            return "User not found"
-    
-    # User is not logged in, redirect to the login page
-    return redirect(url_for('login'))
-	
+
+#weather api search bar
+def get_weather(city):
+    open_weather = "http://api.openweathermap.org/data/2.5/weather?"
+    api_key = '****'
+
+    url = open_weather + "appid=" + api_key + "&q=" + city
+
+    response = requests.get(url).json()
+
+    temp_kelvin = response['main']['temp']
+    temp_celsius = temp_kelvin - 273.15
+    temp_fahrenheit = temp_celsius * (9 / 5) + 32
+    feels_like_kelvin = response['main']['feels_like']
+    feels_like_celsius = feels_like_kelvin - 273.15
+    feels_like_fahrenheit = feels_like_celsius * (9 / 5) + 32
+    description = response['weather'][0]['description']
+    sunrise_time = dt.datetime.utcfromtimestamp(response['sys']['sunrise'] + response['timezone'])
+    sunset_time = dt.datetime.utcfromtimestamp(response['sys']['sunset'] + response['timezone'])
+
+    weather_info = [
+        f"Temperature in {city}: {temp_celsius:.2f}C or {temp_fahrenheit:.2f}F",
+        f"Temperature in {city} feels like {feels_like_celsius:.2f}C or {feels_like_fahrenheit:.2f}F",
+        f"General Weather in {city}: {description}",
+        f"Sun Rises in {city} at {sunrise_time} local time.",
+        f"Sun Sets in {city} at {sunset_time} local time."
+    ]
+
+    return weather_info
+
+@app.route("/", methods=["GET", "POST"])
+def weather_app():
+    if request.method == "POST":
+        city = request.form["city"]
+        weather_info = get_weather(city)
+        return render_template("weather_results.html", weather_info=weather_info)
+    return render_template("weather_form.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
     
-

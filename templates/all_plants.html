@@ -70,6 +70,7 @@ p {
         <p>{{plant['scientific_name']}}</p>
         <form action="/add_to_collection" method="POST">
         <input type="hidden" name="plant_id" value="{{ plant['plant_id'] }}">
+        
         <input type="submit" class="bttn" value="Add to Collection" />
       </form>
         </div>

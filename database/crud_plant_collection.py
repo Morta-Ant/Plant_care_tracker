@@ -1,6 +1,6 @@
 import mysql.connector
 from database.config import HOST, USER, PASSWORD, DATABASE
-
+from database.database_connect import get_connector, DbConnectionError
 class DbConnectionError(Exception):
     pass
 
@@ -13,6 +13,7 @@ def get_connector(DATABASE):
 		database=DATABASE
 	)
 	return connector
+
 
 
 def get_all_plant_collections():
@@ -33,9 +34,12 @@ def get_all_plant_collections():
 		if connector:
 			connector.close()
 
+
 def get_plant_collection_by_ids(user_id, plant_id):
 	db_name = DATABASE # update as required
 	connector = get_connector(db_name)
+
+
 	try:
 		sql = "SELECT * FROM plant_collection WHERE user_id = %s AND plant_id = %s"
 		val = (user_id, plant_id)
@@ -52,6 +56,7 @@ def get_plant_collection_by_ids(user_id, plant_id):
 	finally:
 		if connector:
 			connector.close()
+
 
 
 			
@@ -78,8 +83,22 @@ plant_collection={
    'upcoming_care':'2020-09-27',
 
 }
+def get_plants_in_user_collection(user_id):
+	sql = f"""SELECT pc.user_id, pc.plant_id, pc.upcoming_care, p.common_name, p.scientific_name, p.image FROM plant_collection pc
+				LEFT JOIN plants p 
+				ON p.plant_id = pc.plant_id
+				WHERE user_id = {user_id}"""
+	connector = get_connector()
+	cursor = connector.cursor(dictionary=True)
+	cursor.execute(sql)
+	result = cursor.fetchall()
+	cursor.close()
+	return result
 
-def create_plant_collection(plant_collection):
+			
+
+
+def add_plant_to_collection(plant_collection):
 	try:
 		db_name = DATABASE
 		sql = "INSERT INTO plant_collection (user_id, plant_id, last_care, upcoming_care) VALUES (%s, %s, %s, %s)"
@@ -100,7 +119,9 @@ def create_plant_collection(plant_collection):
 
 
 
+
 def update_plant_collection(plant_collection):
+
 	connector = get_connector()
 	try:
 		sql = "UPDATE plant_collection SET last_care = %s, upcoming_care = %s WHERE user_id = %s AND plant_id = %s"
@@ -117,7 +138,9 @@ def update_plant_collection(plant_collection):
 			connector.close()
 
 
+
 def delete_plant_collection(user_id, plant_id):
+
 	connector = get_connector()
 	cursor = connector.cursor()
 	try:
@@ -134,7 +157,28 @@ def delete_plant_collection(user_id, plant_id):
 			cursor.close()
 		if connector:
 			connector.close()
+def create_plant_collection(plants_rec):
+    try:
+        db_name = DATABASE
+        db_connection = get_connector(db_name)
+        cur = db_connection.cursor()
+        print("Connected to DB: %s" % db_name)
+        query = """INSERT INTO plant_collection ({}) VALUES (%s, %s, %s, %s)""".format(', '.join(plants_rec.keys()))
+        values = (plants_rec['user_id'],plants_rec['plant_id'], plants_rec['last_care'],plants_rec['upcoming_care'])
+        cur.execute(query,values)
+        #cur.execute(query)
+        db_connection.commit()  # VERY IMPORTANT, otherwise, rows would not be added or reflected in the DB!
+        cur.close()
 
+    except Exception:
+        raise DbConnectionError("Failed to read data from DB")
+
+    finally:
+        if db_connection:
+            db_connection.close()
+            print("DB connection is closed")
+
+    print("Record added to DB")
 def main():
 	#create_plant_collection(plant_collection)
     #get_all_plant_collections()
