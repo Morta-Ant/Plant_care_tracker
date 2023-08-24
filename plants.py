@@ -98,8 +98,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
         user = get_user_by_email(email)
-        # user format: (1, 'Name', 'Surname', 'email@email.com', '$2b$12$ewLJwOyJmENA3qyDBjchBe.Ceq9jJNNVGxC..uMPFrvhX7mBdZzHm')
-        if user is not None:  # Check if user exists
+        if user is not None:
           passwordDB = user['passwd']
           is_password_correct = bcrypt.checkpw(password.encode("utf-8"), passwordDB.encode("utf-8"))
           if is_password_correct:
@@ -107,7 +106,6 @@ def login():
              session['id'] = user['user_id']
              session['email'] = user['email']
              session['firstname']=user['firstname']
-             success_msg="You are now logged in"
              return redirect(url_for('collection'))
           else:
                 error = 'Incorrect username or password, Please try again!'
@@ -176,12 +174,15 @@ def add_test_data():
 #get weather info
 @app.route("/weather", methods=["POST"])
 def weather_app():
-    if request.method == "POST":
-        city = request.form["city"]
-        weather_data = get_weather_data(city)
-        weather_info = WeatherInfo(weather_data)
-        daylight_info = DaylightInfo(weather_data)
-        return render_template("weather_results.html", city = city, weather_info = weather_info, daylight_info = daylight_info)
+    try:
+        if request.method == "POST":
+            city = request.form["city"]
+            weather_data = get_weather_data(city)
+            weather_info = WeatherInfo(weather_data)
+            daylight_info = DaylightInfo(weather_data)
+            return render_template("weather_results.html", city = city, weather_info = weather_info, daylight_info = daylight_info)
+    except Exception as e:
+        return f"Failed to retrieve the data: {e}"
 
 if __name__ == '__main__':
     app.run(debug=True)

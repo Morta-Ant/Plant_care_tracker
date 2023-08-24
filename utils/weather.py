@@ -58,42 +58,44 @@ class WeatherInfo:
     def get_advice_by_weather_type(self):
         if self.type == "Thunderstorm":
             return "Keep indoors plants away from the windows to avoid drafts. Bring your outdoors plants inside or cover to protect from damage."
-        if self.type == "Rain":
+        elif self.type == "Rain":
             if self.details in ["light rain", "moderate rain", "light intensity shower rain"]:
                 return "You can skip watering your outdoors plants for a few days. Consider using a grow light for indoor plants that enjoy full sun."
             else:
                 return "Heavy rain might damage your outdoors plants. Consider bringing them inside or covering to protect from damage."
-        if self.type == "Drizzle":
+        elif self.type == "Drizzle":
             return "You can skip watering your outdoors plants for a few days. Consider using a grow light for indoor plants that enjoy full sun."
-        if self.type == "Snow":
+        elif self.type == "Snow":
             return "Keep your plants away from windows and consider using a grow light."
-        if self.type == "Clear":
+        elif self.type == "Clear":
             return "Plants that thrive in full sun will be happy! Place the ones that prefer low-light away from the window."
-        if self.type == "Clouds":
+        elif self.type == "Clouds":
             if self.details == "few clouds":
                 return "Plants that thrive in full sun and partial shade will be happy! Place the ones that prefer low-light away from the window."
             elif self.details in ["scattered clouds", "broken clouds"]:
                 return "Plants that thrive in partial shade and bright indirect light will be happy! Consider using a grow light for the ones that need full sun."
             else: 
                 return "Plants that thrive in low-light will be happy! Consider using a grow light for the ones that need a bit more sun."
+        else:
+            return "No advice available"
         
     def get_advice_by_temp(self):
-        if 15 < self.temp < 24:
-            return "Most plants will be happy in this temperature."
-        elif 5 < self.temp < 15:
-            return "it's a bit chilly outside, make sure to keep your room temperature above 15C."
-        elif self.temp < 5:
+        if self.temp < 5:
             return "it's very cold outside, keep your plants away from the windows. Watch for curling and browning leaves."
-        elif self.temp > 30:
+        elif 5 <= self.temp < 15:
+            return "it's a bit chilly outside, make sure to keep your room temperature above 15C."
+        elif 15 <= self.temp < 24:
+            return "Most plants will be happy in this temperature."
+        elif 24 <= self.temp < 30:
             return "it's very hot outside, keep your plants in the shade, mist them often and water more frequently. Watch for wilting and yellowing leaves."
         else:
             return "it's quite hot, mist your plants to help them retain moisture. Watch for wilting and yellowing leaves."
     
     def get_advice_by_humidity(self):
-        if 60 < self.humidity < 80:
-            return "perfect for most houseplants!"
-        elif self.humidity > 80:
+        if self.humidity > 80:
             return "Plenty of moisture in the air, water your plants less frequently!"
+        elif 60 < self.humidity < 80:
+            return "perfect for most houseplants!"
         elif 40 < self.humidity < 60:
             return "Mist your plants to help them retain moisture."
         else:
@@ -102,9 +104,13 @@ class WeatherInfo:
 
 def get_weather_data(city):
     open_weather = "http://api.openweathermap.org/data/2.5/weather?"
-    url = open_weather + "&q=" + city + "&appid=" + API_KEY + "&units=metric" 
-    response = requests.get(url).json()
-    return response
+    url = open_weather + "&q=" + city + "&appid=" + API_KEY + "&units=metric"
+    try:
+        response = requests.get(url).json()
+        return response
+    except ConnectionError:
+        "Something went wrong: unable to process request" 
+
 
 
 
