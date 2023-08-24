@@ -107,6 +107,23 @@ p {
   font-style: italic;
 }
 
+.advice_box {
+  border: 4px solid #3a8f6fde;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  
+}
+.advice{
+  color: #153428de;
+  font-size: medium;
+  font-style: italic;
+  padding-inline: 5px;
+}
+
+.weather_text_box{
+  max-width: fit-content;
+  padding-left: 50px;
+}
 /*Single Plant pages*/
 
 .plant {
