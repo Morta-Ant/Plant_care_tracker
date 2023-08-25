@@ -4,10 +4,33 @@ from database.database_connect import get_connector, DbConnectionError
 def get_all_plant_collections():
 	connector = get_connector()
 	try:
-		sql = "SELECT * FROM plant_collection"
+		sql = """SELECT * FROM plant_collection"""
 		cursor = connector.cursor(dictionary=True)
 		cursor.execute(sql)
 		result = cursor.fetchall()
+		#cursor.close()
+		#print(result)
+		return result
+	    #cursor.close(
+	except Exception:
+		raise DbConnectionError("Failed to read data from DB")
+	finally:
+		if connector:
+			connector.close()
+
+
+def get_plant_collection_by_ids(user_id, plant_id):
+	connector = get_connector()
+
+	try:
+		sql = "SELECT * FROM plant_collection WHERE user_id = %s AND plant_id = %s"
+		val = (user_id, plant_id)
+		#connector = get_connector()
+		cursor = connector.cursor(dictionary=True)
+		cursor.execute(sql, val)
+		result = cursor.fetchone()
+		
+		print(result)
 		cursor.close()
 		return result
 	except Exception:
@@ -64,7 +87,7 @@ def add_plant_to_collection(plant_collection):
 		cursor.close()
 		return plant_collection
 	except Exception:
-		raise DbConnectionError("Failed to read data from DB")
+		raise DbConnectionError("Failed to add data to DB")
 	finally:
 		if connector:
 			connector.close()
@@ -103,5 +126,24 @@ def delete_plant_from_collection(user_id, plant_id):
 		if connector:
 			connector.close()
 
+def create_plant_collection(plants_rec):
+    try:
+        db_connection = get_connector()
+        cur = db_connection.cursor()
+        query = """INSERT INTO plant_collection ({}) VALUES (%s, %s, %s, %s)""".format(', '.join(plants_rec.keys()))
+        values = (plants_rec['user_id'],plants_rec['plant_id'], plants_rec['last_care'],plants_rec['upcoming_care'])
+        cur.execute(query,values)
+        db_connection.commit()  # VERY IMPORTANT, otherwise, rows would not be added or reflected in the DB!
+        cur.close()
+
+    except Exception:
+        raise DbConnectionError("Failed to read data from DB")
+
+    finally:
+        if db_connection:
+            db_connection.close()
+            print("DB connection is closed")
+
+    print("Record added to DB")
 
 
