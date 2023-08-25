@@ -1,16 +1,12 @@
 {% extends "base.html" %} 
 {% block title %}All Plants{% endblock %} 
+
 {% block content %}
 <h1>Find Your Plant!</h1>
 
-<div>
-  <form class="plants_form" action="/search" method="post">
-    <input
-      class="plants_input"
-      type="text"
-      name="search_query"
-      placeholder="Enter search query"
-    />
+<div class="plants_form">
+  <form action="/search" method="post">
+    <input class = "plants_input" type="text" name="search_query" placeholder="Enter search query" />
     <input type="submit" value="Search" />
   </form>
 </div>
@@ -21,9 +17,15 @@
       <img src="{{ plant['image'] }}" class="image" /> <br />
       <a href="/plants/{{ plant['plant_id'] }}"> {{ plant['common_name'] }} </a>
       <br />
-      <p class="sc_name">{{ plant['scientific_name'] }}</p>
+      <p>{{ plant['scientific_name'] }}</p>
+      <form action="/add_to_collection" method="POST">
+        <input type="hidden" name="plant_id" value="{{ plant['plant_id'] }}" />
+
+        <input type="submit" class="bttn" value="Add to Collection" />
+      </form>
     </div>
     {% endfor %}
   </div>
+
+  {% endblock %}
 </body>
-{% endblock %}

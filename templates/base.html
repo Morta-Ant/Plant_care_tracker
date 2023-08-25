@@ -26,25 +26,50 @@
 
       <!-- Navigation bar at the top -->
       {% if session["loggedin"] == True %}
-
       <nav>
         <a href="/">Index</a>
         <a href="/plants">All Plants</a>
         <a href="/collection">Collection</a>
         <a href="/logout">Logout</a>
-      </nav>
+     </nav>
 
+    {% else %}
+
+    <nav>
+      {% if error%}
+      <p>{{error}}</p>
       {% else %}
-
-      <nav>
-        <a href="/">Index</a>
-        <a href="/plants">All Plants</a>
-        <a href="/collection">Collection</a>
-        <a href="/signup">Sign Up</a>
-        <a href="/login">Login</a>
-      </nav>
-
+      <a href="/">Index</a>
+      <a href="/plants">All Plants</a>
+      <a href="/collection">Collection</a>
+      <a href="/signup">Sign Up</a>
+      <a href="/login">Login</a>
       {% endif %}
+
+      {% if error %}
+        <div class="alert alert-danger">
+           {{error}}
+        </div>
+      {% endif %}
+    </nav>
+  {% endif %}
+
+  {% if session['loggedin'] %}
+        <h5>Welcome, {{session['firstname'] }}</h5>
+  {% endif %} 
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-danger">
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endwith %}
+
 
       <!--weather search bar-->
       <form class="search_city" action="/weather" method="POST">
@@ -59,7 +84,7 @@
         </label>
         <button class="button_city" type="submit">Get Weather</button>
       </form>
-    </header>
+  </header>
 
     <div class="content">{% block content %}{% endblock %}</div>
 
