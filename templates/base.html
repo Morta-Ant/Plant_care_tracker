@@ -3,7 +3,6 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title> {% block title %} {% endblock %}</title>
 
@@ -140,44 +139,68 @@
 
       <!-- Navigation bar at the top -->
       {% if session["loggedin"] == True %}
-
-        <nav>
-            <a href="/">Index</a>
-            <a href="/plants">All Plants</a>
-            <a href="/collection">Collection</a>
-            <a href="/logout">Logout</a>
-         </nav>
+      <nav>
+        <a href="/">Index</a>
+        <a href="/plants">All Plants</a>
+        <a href="/collection">Collection</a>
+        <a href="/logout">Logout</a>
+     </nav>
 
     {% else %}
 
     <nav>
-        <a href="/">Index</a>
-        <a href="/plants">All Plants</a>
-        <a href="/collection">Collection</a>
-        <a href="/signup">Sign Up</a>
-        <a href="/login">Login</a>
-     </nav>
+      {% if error%}
+      <p>{{error}}</p>
+      {% else %}
+      <a href="/">Index</a>
+      <a href="/plants">All Plants</a>
+      <a href="/collection">Collection</a>
+      <a href="/signup">Sign Up</a>
+      <a href="/login">Login</a>
+      {% endif %}
 
+      {% if error %}
+        <div class="alert alert-danger">
+           {{error}}
+        </div>
+      {% endif %}
+    </nav>
+  {% endif %}
 
-    {% endif %}
+  {% if session['loggedin'] %}
+        <h5>Welcome, {{session['firstname'] }}</h5>
+  {% endif %} 
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-danger">
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endwith %}
 
 <!--weather search bar-->
 <form method="POST">
-        <input type="text" name="city" placeholder="Enter city">
-        <button type="submit">Local Weather</button>
-    </form>
-    {% if weather_info %}
-    <div>
-        <p>{{ weather_info }}</p>
-    </div>
-    {% endif %}
-  </header>
+  <input type="text" name="city" placeholder="Enter city">
+  <button type="submit">Local Weather</button>
+</form>
+{% if weather_info %}
+<div>
+  <p>{{ weather_info }}</p>
+</div>
+{% endif %}
+</header>
 
-    <div class="content">{% block content %}{% endblock %}</div>
+<div class="content">{% block content %}{% endblock %}</div>
 
-    <footer class = "footer">
-        <p> By: Cynthia Karimi, Emoefe Oweibo, Heather Embleton, Jaqueline Arcangelo, Morta Antanaviciute </p>
-    </footer>
+<footer class = "footer">
+  <p> By: Cynthia Karimi, Emoefe Oweibo, Heather Embleton, Jaqueline Arcangelo, Morta Antanaviciute </p>
+</footer>
 
-  </body>
+</body>
+
 </html>
