@@ -5,7 +5,7 @@ from database.database_connect import DbConnectionError
 from database.crud_users import create_user
 from database.config import SECRET_KEY
 from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
-from database.crud_plant_collection import add_plant_to_collection,get_plants_data_in_user_collection,create_plant_collection,add_plant_to_collection, get_user_collection,update_plant_in_collection
+from database.crud_plant_collection import add_plant_to_collection,get_plants_data_in_user_collection,add_plant_to_collection, get_user_collection,update_plant_in_collection, delete_plant_from_collection
 from flask_login import LoginManager
 from utils.weather import WeatherInfo, DaylightInfo, get_weather_data
 from utils.get_next_care_date import is_next_care_date_up_to_date, get_next_care_date
@@ -169,21 +169,34 @@ def add_to_collection():
         if plant_id is None:
             return "Invalid request"
 
-        # Create a plant_collection dictionary
+        # Get care dates
+        last_care = datetime.now()
+        watering_frequency = get_plant_by_id(plant_id)["watering_frequency"]
+        upcoming_care = get_next_care_date(last_care,watering_frequency)
         plant_collection = {
             "user_id": user_id,
             "plant_id": plant_id,
-            "last_care": datetime.now(),  # Set this to the current datetime
-            "upcoming_care": datetime.now() + timedelta(days=7),  # Set this to the current datetime plus 7 days
+            "last_care": last_care,
+            "upcoming_care": upcoming_care
         }
 
-
         # Call the create_plant_collection function to insert the record into the database
-        create_plant_collection(plant_collection)
+        add_plant_to_collection(plant_collection)
         return redirect(url_for('collection'))  # Redirect to the collection page
 
     except Exception as e:
         return f"Failed to add plant to collection: {e}"
+    
+# remove from collection
+@app.route("/remove_from_collection", methods=["POST"])
+def remove_from_collection():
+    user_id = session.get('id')
+    try:
+        plant_id = request.form.get("plant_id", type=int)
+        delete_plant_from_collection(user_id, plant_id)
+        return redirect(url_for("collection"))
+    except Exception as e:
+        return f"failed to remove from collection: {e}"
 
 
 #currently search searches the json file, should pull from database via plant-care-api
@@ -217,15 +230,15 @@ def add_test_data():
 #get weather info
 @app.route("/weather", methods=["POST"])
 def weather_app():
-    #try:
+    try:
         if request.method == "POST":
             city = request.form["city"]
             weather_data = get_weather_data(city)
             weather_info = WeatherInfo(weather_data)
             daylight_info = DaylightInfo(weather_data)
             return render_template("weather_results.html", city = city, weather_info = weather_info, daylight_info = daylight_info)
-    #except Exception as e:
-    #    return f"Failed to retrieve the data: {e}"
+    except Exception as e:
+        return f"Failed to retrieve the data: {e}"
 
 if __name__ == '__main__':
     app.run(debug=True)

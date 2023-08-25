@@ -109,7 +109,7 @@ def get_weather_data(city):
         response = requests.get(url).json()
         return response
     except ConnectionError:
-        "Something went wrong: unable to process request" 
+        "Something went wrong: Unable to process request" 
 
 
 
