@@ -5,9 +5,10 @@ from database.database_connect import DbConnectionError
 from database.crud_users import create_user
 from database.config import SECRET_KEY
 from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
-from database.crud_plant_collection import add_plant_to_collection,get_plants_in_user_collection,create_plant_collection,add_plant_to_collection, get_plants_in_user_collection
+from database.crud_plant_collection import add_plant_to_collection,get_plants_data_in_user_collection,create_plant_collection,add_plant_to_collection, get_user_collection,update_plant_in_collection
 from flask_login import LoginManager
 from utils.weather import WeatherInfo, DaylightInfo, get_weather_data
+from utils.get_next_care_date import is_next_care_date_up_to_date, get_next_care_date
 from datetime import datetime,timedelta
 
 app = Flask(__name__)
@@ -130,11 +131,24 @@ def logout():
 def collection():
     if "loggedin" in session:
         try:
-            user_plants = get_plants_in_user_collection(session["id"])
+            user_collection = get_user_collection(session["id"])
+            # Check if any care dates need updating        
+            for entry in user_collection:
+                if not is_next_care_date_up_to_date(entry["upcoming_care"]):
+                    updated_collection_entry = {}
+                    updated_collection_entry["user_id"] = session["id"]
+                    updated_collection_entry["plant_id"] = entry["plant_id"]
+                    updated_collection_entry["last_care"] = entry["upcoming_care"]
+                    watering_frequency = get_plant_by_id(entry["plant_id"])["watering_frequency"]
+                    new_upcoming_care = get_next_care_date(entry["upcoming_care"], watering_frequency)
+                    updated_collection_entry["upcoming_care"] = new_upcoming_care
+                    update_plant_in_collection(updated_collection_entry)
+
+            user_plants = get_plants_data_in_user_collection(session["id"])
+            print(user_plants)
             return render_template("collection.html", data = user_plants)
         except Exception as e:
             return f"Oops! Something went wrong: {e}"
-
     else:
         flash("You need to log in to access the Collection.", 'error')
         return redirect(url_for('login'))
@@ -187,7 +201,7 @@ def search_data(query):
 def add_test_data():
     test_plant_collection = {
         "user_id": 1,
-        "plant_id": 123,
+        "plant_id": 9,
         "last_care": "2023-08-16",
         "upcoming_care": "2023-08-23"
     }
@@ -203,15 +217,15 @@ def add_test_data():
 #get weather info
 @app.route("/weather", methods=["POST"])
 def weather_app():
-    try:
+    #try:
         if request.method == "POST":
             city = request.form["city"]
             weather_data = get_weather_data(city)
             weather_info = WeatherInfo(weather_data)
             daylight_info = DaylightInfo(weather_data)
             return render_template("weather_results.html", city = city, weather_info = weather_info, daylight_info = daylight_info)
-    except Exception as e:
-        return f"Failed to retrieve the data: {e}"
+    #except Exception as e:
+    #    return f"Failed to retrieve the data: {e}"
 
 if __name__ == '__main__':
     app.run(debug=True)
