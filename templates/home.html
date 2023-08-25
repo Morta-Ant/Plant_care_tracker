@@ -1,81 +1,30 @@
-{% extends "base.html" %}
-{% block title %}Home{% endblock %}
-{% block style %}
-    <style>
-       
-        /* Image thumbnail styles */
-        .images-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-start; /* Align images to the left */
-        }
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
+{% block content%}
+<!--   images thumbnails -->
+<div class="images-container">
+  <div class="thumbnail">
+    <img
+      src="https://images.pexels.com/photos/2292100/pexels-photo-2292100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      alt="Image 1"
+    />
+  </div>
+  <div class="thumbnail">
+    <img
+      src="https://images.pexels.com/photos/11177966/pexels-photo-11177966.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      alt="Image 2"
+    />
+  </div>
+  <div class="thumbnail">
+    <img
+      src="https://images.pexels.com/photos/6349701/pexels-photo-6349701.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+      alt="Image 3"
+    />
+  </div>
+</div>
 
-        .thumbnail {
-            border: 20px solid #3A8F6FDE;
-            border-radius: 5px;
-            margin: 20px;
-            padding: 15px;
-        }
-
-        .thumbnail img {
-            width: 200px; /* Set your desired thumbnail size */
-            height: 200px; /* Set your desired thumbnail size */
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        /* Text box styles */
-        .text-box {
-            border: 20px solid #3A8F6FDE;
-            border-radius: 5px;
-            padding: 35px;
-            max-width: 800px; /* Adjust the width as needed */
-            margin: 0 50px 50px 0; /* Add right and bottom margin to move it to the left */
-            text-align: center;
-        }
-
-        h2 {
-            color: #000000;
-            font-size: 50px;
-            margin-bottom: 10px;
-        }
-
-        p {
-            font-size: 20px;
-            line-height: 1.6;
-        }
-
-        /* Body styles */
-        body {
-            background-image: url("https://images.pexels.com/photos/1470171/pexels-photo-1470171.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center center;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif; /* Set your preferred font-family */
-            color: #333; /* Set your preferred font color */
-        }
-
-    </style>
-    {% endblock %}
-
-    {% block content %}
-        <!--   images thumbnails -->
-        <div class="images-container">
-            <div class="thumbnail">
-                <img src="https://images.pexels.com/photos/2292100/pexels-photo-2292100.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Image 1">
-            </div>
-            <div class="thumbnail">
-                <img src="https://images.pexels.com/photos/11177966/pexels-photo-11177966.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Image 2">
-            </div>
-            <div class="thumbnail">
-                <img src="https://images.pexels.com/photos/6349701/pexels-photo-6349701.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Image 3">
-            </div>
-        </div>
-
-        <div class="text-box">
-            <h2>Plant Care</h2>
-            <p>Find out all your plant care in one place.</p>
-        </div>
-    {% endblock %}
+<div class="text-box">
+  <h2>Plant Care</h2>
+  <p>Find out all your plant care in one place.</p>
+</div>
+{% endblock %}

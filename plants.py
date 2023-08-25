@@ -139,7 +139,7 @@ def collection():
         flash("You need to log in to access the Collection.", 'error')
         return redirect(url_for('login'))
 
-
+#add to collection
 @app.route("/add_to_collection", methods=["POST"])
 def add_to_collection():
     # Check if the user is logged in
@@ -228,14 +228,13 @@ def get_weather(city):
     ]
 
     return weather_info
-
-@app.route("/", methods=["GET", "POST"])
+#get weather info
+@app.route("/weather", methods=["POST"])
 def weather_app():
     if request.method == "POST":
         city = request.form["city"]
         weather_info = get_weather(city)
         return render_template("weather_results.html", weather_info=weather_info)
-    return render_template("weather_form.html")
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -7,9 +7,8 @@
         <div class="thumbnail">
           <img src="{{plant['image']}}" class = "image"/> <br>
         <a href="/plants/{{plant['plant_id']}}"> {{plant["common_name"]}} </a> <br>
-        <p>{{plant['scientific_name']}} <br>
-            Next Care Action: {{plant["upcoming_care"]}}
-        </p>
+        <p class = "sc_name">{{plant['scientific_name']}} </p>
+        <p> Next watering: {{plant["upcoming_care"]}} </p>
         </div>
         {% endfor %}
     </div>

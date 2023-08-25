@@ -1,10 +1,191 @@
+/*Base elements*/
+
 body {
-    background-image: url("https://images.pexels.com/photos/1470171/pexels-photo-1470171.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif; /* Set your preferred font-family */
-    color: #333; /* Set your preferred font color */
+  background-image: url('https://images.pexels.com/photos/1470171/pexels-photo-1470171.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif; /* Set your preferred font-family */
+  color: #333; /* Set your preferred font color */
+}
+
+header {
+  background-color: #333;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+nav {
+  display: flex;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 20px;
+}
+
+footer {
+  background-color: #333;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-style: italic;
+  font-size: small;
+}
+
+/* Image thumbnail styles*/
+.images-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Align images to the left */
+}
+
+.thumbnail {
+  border: 20px solid #3a8f6fde;
+  border-radius: 5px;
+  margin: 20px;
+  padding: 15px;
+  background-color: #ffffff;
+}
+
+.thumbnail img {
+  width: 200px; /* Set your desired thumbnail size */
+  height: 200px; /* Set your desired thumbnail size */
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+}
+
+/* Text box styles */
+.text-box {
+  border: 20px solid #3a8f6fde;
+  border-radius: 5px;
+  padding: 35px;
+  max-width: 800px; /* Adjust the width as needed */
+  margin: 0 50px 50px 0; /* Add right and bottom margin to move it to the left */
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+}
+
+h2 {
+  color: #000000;
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+.sc_name {
+  font-size: small;
+  font-style: italic;
+}
+
+/*Single Plant pages*/
+
+.plant {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  padding-bottom: 20%;
+}
+
+.plant_text_box {
+  border: none;
+  padding: 35px;
+  max-width: 500px;
+  margin: 0 50px 50px 0;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.7);
+}
+/*Plant Search */
+
+.plants_form {
+  margin: 0 auto;
+  text-align: center;
+  background-color: #eee;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.plants_input {
+  width: 70%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+}
+
+/* weather search bar*/
+.search_city {
+  display: flex;
+  align-items: center;
+}
+
+.input_city {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.button_city {
+  background-color: #3a8f6fde;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  position: relative;
+  top: 16px;
+}
+
+.label_city {
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+  line-height: 2;
+}
+
+/*Singup and Login*/
+label {
+  display: flex;
+  flex-direction: column;
+  line-height: 2;
+}
+
+.user_form_button {
+  background-color: #3a8f6fde;
+  color: #fff;
+  padding: 5px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
 }
