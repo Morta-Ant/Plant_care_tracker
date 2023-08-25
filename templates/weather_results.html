@@ -1,5 +1,24 @@
-<ul>
-    {% for info in weather_info %}
-    <li>{{ info }}</li>
-    {% endfor %}
-</ul>
+{% extends "base.html" %} 
+{% block title %}Plant Care and Weather{% endblock %} 
+{% block content %}
+<div class = "weather_text_box">
+    <p>Weather in {{city}}: {{weather_info.details}}</p>
+    <div class = "advice_box">
+    <p class = "advice">{{weather_info.get_advice_by_weather_type()}}</p>
+    </div>
+    <p>Temperature: {{weather_info.temp}}&deg;C</p>
+    <div class = "advice_box">
+    <p class = "advice">{{weather_info.get_advice_by_temp()}}</p>
+    </div>
+    <p>Humidity: {{weather_info.humidity}}%</p>
+    <div class = "advice_box">
+    <p class = "advice">{{weather_info.get_advice_by_humidity()}}</p>
+    </div>
+    <p>Sunrise: {{daylight_info.format_sunrise()}}</p>
+    <p>Sunset: {{daylight_info.format_sunset()}}</p>
+    <p>Daylight time: {{daylight_info.format_daylight()}}</p>
+    <div class = "advice_box">
+    <p class = "advice">{{daylight_info.get_advice_by_daylight_time()}}</p>
+    </div>
+</div>
+{% endblock %}
