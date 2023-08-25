@@ -1,11 +1,6 @@
 from flask import Flask, jsonify, request
 from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
-<<<<<<< HEAD
-from database.crud_plant_collection import get_plant_collection_by_ids,create_plant_collection, get_plant_collection_by_user,update_plant_collection,delete_plant_collection
-=======
 from database.crud_plant_collection import get_plant_in_collection_by_id ,add_plant_to_collection,update_plant_in_collection,delete_plant_from_collection, get_plants_in_user_collection
->>>>>>> main
-from datetime import datetime, timedelta
 from utils.get_next_care_date import get_next_care_date
 
 app = Flask(__name__)

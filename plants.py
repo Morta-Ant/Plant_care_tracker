@@ -1,13 +1,12 @@
-from flask import Flask, render_template, redirect, session, request, url_for,g,flash
+from flask import Flask, render_template, redirect, session, request, url_for, flash
 import json, re, bcrypt, requests, datetime as dt
 from database.crud_users import create_user, get_user_by_email
 from database.database_connect import DbConnectionError
-from database.crud_users import create_user,get_user_by_id
+from database.crud_users import create_user
 from database.config import SECRET_KEY
 from database.crud_plants import get_all_plants, get_plant_by_id
-from database.crud_plant_collection import add_plant_to_collection,get_all_plant_collections
-from database.crud_plant_collection import get_plants_in_user_collection,create_plant_collection
-
+from database.crud_plant_collection import add_plant_to_collection,get_all_plant_collections,get_plants_in_user_collection,create_plant_collection
+from database.crud_plant_collection import add_plant_to_collection, get_plants_in_user_collection
 from flask_login import current_user, LoginManager
 from datetime import datetime,timedelta
 
@@ -39,8 +38,6 @@ def one_plant(id):
     except Exception as e:
         return f"Oops! Something went wrong: {e}"
  
-
-#pages for individual plants
 
 #search
 @app.route('/search', methods=['GET', 'POST'])
@@ -111,11 +108,7 @@ def login():
              session['email'] = user['email']
              session['firstname']=user['firstname']
              success_msg="You are now logged in"
-
-             return redirect(url_for('collection'),success_msg)
-
-        
-
+             return redirect(url_for('collection'))
           else:
                 error = 'Incorrect username or password, Please try again!'
         else:
@@ -136,53 +129,24 @@ def logout():
 
 @app.route("/collection")
 def collection():
-    error = None
-    user_id = session.get('id')
-    if "loggedin" not in session:
+    if "loggedin" in session:
+        try:
+            user_plants = get_plants_in_user_collection(session["id"])
+            return render_template("collection.html", data = user_plants)
+        except Exception as e:
+            return f"Oops! Something went wrong: {e}"
+
+    else:
         flash("You need to log in to access the Collection.", 'error')
-        return redirect(url_for('index'))
-    try:
-        if "loggedin" in session:
-            user_plants = get_all_plant_collections()
-            plant_data = get_all_plants()
-            
-            # Pre-process data to match plant information with care information
-            pre_processed_data = []
-            for care_info in user_plants:
-                matching_plant = next((plant for plant in plant_data if plant['plant_id'] == care_info['plant_id']), None)
-                if matching_plant:
-                    pre_processed_data.append({
-                        'plant': matching_plant,
-                        'care_info': care_info
-                    })
-            print(pre_processed_data)
-            return render_template("collection.html", data=pre_processed_data,error=error)
-    except Exception as e:
-        return f"Oops! Something went wrong: {e}"
+        return redirect(url_for('login'))
 
-
-def plants():
-    try:
-        plant_data = get_all_plants()  # Call your function to get plant data from the database
-        return render_template("all_plants.html", data=plant_data)
-    except Exception as e:
-        return f"Oops! Something went wrong: {e}"
-
-#collection There are ARE TWO COLLECTION FUNCTIONS
-# @app.route("/collection")
-# def collection():
-#     if "loggedin" in session:
-#         user_plants = get_plants_in_user_collection(session["id"])
-#         return render_template("collection.html", data = user_plants)
-#     return redirect(url_for("login"))
 
 @app.route("/add_to_collection", methods=["POST"])
 def add_to_collection():
-    error = None
     # Check if the user is logged in
     if not session.get('loggedin'):
         flash("You need to log in to add plants to your collection.")
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     # Get the user_id from the session
     user_id = session.get('id')
 
@@ -203,26 +167,11 @@ def add_to_collection():
 
         # Call the create_plant_collection function to insert the record into the database
         created_collection = create_plant_collection(plant_collection)
-
-
-        if created_collection:
-            return redirect(url_for('collection'))  # Redirect to the collection page
-        else:
-            return "Failed to add plant to collection"
+        return redirect(url_for('collection'))  # Redirect to the collection page
 
     except Exception as e:
         return f"Failed to add plant to collection: {e}"
 
-
-# #user collection
-# @app.route("/<user>/collection")
-# def user_collection():
-#     pass
-
-#individual plant within user's collection
-@app.route("/<user>/collection/<id>")
-def user_plant(id):
-    pass
 
 #currently search searches the json file, should pull from database via plant-care-api
 def search_data(query):

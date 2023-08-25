@@ -158,6 +158,7 @@
       <a href="/signup">Sign Up</a>
       <a href="/login">Login</a>
       {% endif %}
+
       {% if error %}
         <div class="alert alert-danger">
            {{error}}
@@ -165,6 +166,7 @@
       {% endif %}
     </nav>
   {% endif %}
+
   {% if session['loggedin'] %}
         <h5>Welcome, {{session['firstname'] }}</h5>
   {% endif %} 
@@ -180,7 +182,6 @@
     </div>
   {% endif %}
 {% endwith %}
-</nav>
 
 <!--weather search bar-->
 <form method="POST">

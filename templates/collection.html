@@ -1,30 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Collection{% endblock %}
 {% block content %}
+
     <div class="grid-container">
-
-        <h2>{{ session['firstname'] }}'s Collection</h2>
-
-        {% if data %}
-            {% for item in data %}
-                {% if item['care_info']['user_id'] == session['id'] %}
-                    <div class="thumbnail">
-                        <!-- Display plant information -->
-                        <p>{{ item['plant']['scientific_name'] }}</p>
-                        <img src="{{ item['plant']['image'] }}" class="image" /><br>
-                        <p>{{ item['plant']["common_name"] }}</p>
-
-                        <!-- Display upcoming care date -->
-                        <p>Last care: {{ item['care_info']["last_care"].strftime('%Y-%m-%d') }}</p>
-                        <p>Upcoming care: {{ item['care_info']["upcoming_care"].strftime('%Y-%m-%d') }}</p>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            <p>No plant collection found.</p>
-        {% endif %}
+        {% for plant in data %}
+        <div class="thumbnail">
+          <img src="{{plant['image']}}" class = "image"/> <br>
+        <a href="/plants/{{plant['plant_id']}}"> {{plant["common_name"]}} </a> <br>
+        <p>{{plant['scientific_name']}} <br>
+            Next Care Action: {{plant["upcoming_care"]}}
+        </p>
+        </div>
+        {% endfor %}
     </div>
+  
 {% endblock %}
-
-
-
