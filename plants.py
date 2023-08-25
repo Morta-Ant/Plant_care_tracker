@@ -4,21 +4,21 @@ from database.crud_users import create_user, get_user_by_email
 from database.database_connect import DbConnectionError
 from database.crud_users import create_user
 from database.config import SECRET_KEY
-from database.crud_plants import get_all_plants, get_plant_by_id
-from database.crud_plant_collection import add_plant_to_collection,get_all_plant_collections,get_plants_in_user_collection,create_plant_collection
-from database.crud_plant_collection import add_plant_to_collection, get_plants_in_user_collection
-from flask_login import current_user, LoginManager
+from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
+from database.crud_plant_collection import add_plant_to_collection,get_plants_in_user_collection,create_plant_collection,add_plant_to_collection, get_plants_in_user_collection
+from flask_login import LoginManager
 from datetime import datetime,timedelta
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 login_manager = LoginManager
 
+#index page
 @app.route("/")
 def index():
     return render_template("home.html")
 
-
+# all plants page
 @app.route("/plants")
 def plants():
     try:
@@ -26,7 +26,8 @@ def plants():
         return render_template("all_plants.html", data=plant_data)
     except Exception as e:
         return f"Oops! Something went wrong: {e}"
-    
+
+#individual plant pages    
 @app.route("/plants/<int:id>")
 def one_plant(id):
     try:
@@ -44,8 +45,8 @@ def one_plant(id):
 def search():
     if request.method == 'POST':
         query = request.form['search_query']
-        results = search_data(query)
-        return render_template('search_results.html', results=results)
+        results = get_plant_by_name(query)
+        return render_template('search_results.html', results = results)
     else:
         return "Invalid request method. Please use the search bar to submit a query."
     
@@ -107,7 +108,6 @@ def login():
             # session['user_id'] = user[email]['user_id']
              session['email'] = user['email']
              session['firstname']=user['firstname']
-             success_msg="You are now logged in"
              return redirect(url_for('collection'))
           else:
                 error = 'Incorrect username or password, Please try again!'
@@ -125,7 +125,6 @@ def logout():
     return redirect(url_for('index'))
 
 
-# Python code to pre-process the data
 
 @app.route("/collection")
 def collection():
@@ -166,7 +165,7 @@ def add_to_collection():
 
 
         # Call the create_plant_collection function to insert the record into the database
-        created_collection = create_plant_collection(plant_collection)
+        create_plant_collection(plant_collection)
         return redirect(url_for('collection'))  # Redirect to the collection page
 
     except Exception as e:

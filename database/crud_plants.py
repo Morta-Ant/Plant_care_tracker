@@ -35,7 +35,7 @@ def get_plant_by_id(id):
 			connector.close()
 
 
-def get_plant_by_name(name,connector):
+def get_plant_by_name(name):
   try:
     sql = "SELECT * FROM plants WHERE LOWER(common_name) LIKE %s OR LOWER(scientific_name) LIKE %s OR LOWER(other_name) LIKE %s"
     formattedText = f"%{name.lower()}%"
