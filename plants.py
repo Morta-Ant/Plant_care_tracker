@@ -24,8 +24,15 @@ def index():
 @app.route("/plants")
 def plants():
     try:
-        plant_data = get_all_plants()  # Call your function to get plant data from the database
-        return render_template("all_plants.html", data=plant_data)
+        collection_plant_ids = []
+        if "loggedin" in session:
+            plant_collection = get_user_collection(session["id"])
+            collection_plant_ids = [plant["plant_id"] for plant in plant_collection]
+
+        plant_data = get_all_plants()
+        print(plant_data)
+        print(collection_plant_ids)
+        return render_template("all_plants.html", data=plant_data, collection_plant_ids=collection_plant_ids)
     except Exception as e:
         return f"Oops! Something went wrong: {e}"
 
@@ -43,14 +50,19 @@ def one_plant(id):
  
 
 #search
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/search', methods=['POST'])
 def search():
-    if request.method == 'POST':
+    try: 
+        collection_plant_ids = []
+        if "loggedin" in session:
+            plant_collection = get_user_collection(session["id"])
+            collection_plant_ids = [plant["plant_id"] for plant in plant_collection]
+
         query = request.form['search_query']
         results = get_plant_by_name(query)
-        return render_template('search_results.html', results = results)
-    else:
-        return "Invalid request method. Please use the search bar to submit a query."
+        return render_template('search_results.html', results = results, collection_plant_ids=collection_plant_ids)
+    except Exception as e:
+        return "Oops! Something went wrong: {e}"
     
 #registration
 @app.route("/signup", methods=["GET","POST"])
@@ -182,7 +194,7 @@ def add_to_collection():
 
         # Call the create_plant_collection function to insert the record into the database
         add_plant_to_collection(plant_collection)
-        return redirect(url_for('collection'))  # Redirect to the collection page
+        return redirect(url_for('plants'))  # Redirect to the collection page
 
     except Exception as e:
         return f"Failed to add plant to collection: {e}"
