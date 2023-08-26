@@ -1,6 +1,13 @@
 {% extends "base.html" %} 
 {% block title %}Search Results{% endblock %} 
 {% block content %}
+<h1>Find Your Plant!</h1>
+<div class="plants_form">
+  <form action="/search" method="post">
+    <input class = "plants_input" type="text" name="search_query" placeholder="Enter search query" />
+    <input type="submit" value="Search" />
+  </form>
+</div>
 <h1>Search Results</h1>
 {% if results %}
 <div class="grid-container">
@@ -10,6 +17,11 @@
     <a href="/plants/{{ result['plant_id'] }}"> {{ result['common_name'] }} </a>
     <br />
     <p class="sc_name">{{ result['scientific_name'] }}</p>
+    <form action="/add_to_collection" method="POST">
+      <input type="hidden" name="plant_id" value="{{ result['plant_id'] }}" />
+
+      <input type="submit" class="bttn" value="Add to Collection" />
+    </form>
   </div>
   {% endfor %}
 </div>
