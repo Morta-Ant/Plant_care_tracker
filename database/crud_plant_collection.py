@@ -1,44 +1,6 @@
 from database.database_connect import get_connector, DbConnectionError
 
 
-def get_all_plant_collections():
-	connector = get_connector()
-	try:
-		sql = """SELECT * FROM plant_collection"""
-		cursor = connector.cursor(dictionary=True)
-		cursor.execute(sql)
-		result = cursor.fetchall()
-		#cursor.close()
-		#print(result)
-		return result
-	    #cursor.close(
-	except Exception:
-		raise DbConnectionError("Failed to read data from DB")
-	finally:
-		if connector:
-			connector.close()
-
-
-def get_plant_collection_by_ids(user_id, plant_id):
-	connector = get_connector()
-
-	try:
-		sql = "SELECT * FROM plant_collection WHERE user_id = %s AND plant_id = %s"
-		val = (user_id, plant_id)
-		#connector = get_connector()
-		cursor = connector.cursor(dictionary=True)
-		cursor.execute(sql, val)
-		result = cursor.fetchone()
-		
-		print(result)
-		cursor.close()
-		return result
-	except Exception:
-		raise DbConnectionError("Failed to read data from DB")
-	finally:
-		if connector:
-			connector.close()
-
 def get_plant_in_collection_by_ids(user_id, plant_id):
 	try:
 		sql = "SELECT * FROM plant_collection WHERE user_id = %s AND plant_id = %s"
@@ -56,25 +18,37 @@ def get_plant_in_collection_by_ids(user_id, plant_id):
 			connector.close()
 
 def get_plants_data_in_user_collection(user_id):
-	sql = f"""SELECT pc.user_id, pc.plant_id, pc.upcoming_care, p.common_name, p.scientific_name, p.image FROM plant_collection pc
-				LEFT JOIN plants p 
-				ON p.plant_id = pc.plant_id
-				WHERE user_id = {user_id}"""
-	connector = get_connector()
-	cursor = connector.cursor(dictionary=True)
-	cursor.execute(sql)
-	result = cursor.fetchall()
-	cursor.close()
-	return result
+	try:
+		sql = f"""SELECT pc.user_id, pc.plant_id, pc.upcoming_care, p.common_name, p.scientific_name, p.image FROM plant_collection pc
+					LEFT JOIN plants p 
+					ON p.plant_id = pc.plant_id
+					WHERE user_id = {user_id}"""
+		connector = get_connector()
+		cursor = connector.cursor(dictionary=True)
+		cursor.execute(sql)
+		result = cursor.fetchall()
+		cursor.close()
+		return result
+	except Exception:
+		raise DbConnectionError("Failed to read data from DB")
+	finally:
+		if connector:
+			connector.close()
 
 def get_user_collection(user_id):
-	sql = f"SELECT * from plant_collection WHERE user_id = {user_id}"
-	connector = get_connector()	
-	cursor = connector.cursor(dictionary=True)
-	cursor.execute(sql)
-	result = cursor.fetchall()
-	cursor.close()
-	return result	
+	try:
+		sql = f"SELECT * from plant_collection WHERE user_id = {user_id}"
+		connector = get_connector()	
+		cursor = connector.cursor(dictionary=True)
+		cursor.execute(sql)
+		result = cursor.fetchall()
+		cursor.close()
+		return result	
+	except Exception:
+		raise DbConnectionError("Failed to read data from DB")
+	finally:
+		if connector:
+			connector.close()
 
 def add_plant_to_collection(plant_collection):
 	try:
@@ -93,10 +67,10 @@ def add_plant_to_collection(plant_collection):
 			connector.close()
 			
 def update_plant_in_collection(plant_collection):
-	connector = get_connector()
 	try:
 		sql = "UPDATE plant_collection SET last_care = %s, upcoming_care = %s WHERE user_id = %s AND plant_id = %s"
 		val = (plant_collection['last_care'], plant_collection['upcoming_care'], plant_collection['user_id'], plant_collection['plant_id'])
+		connector = get_connector()
 		cursor = connector.cursor()
 		cursor.execute(sql, val)
 		connector.commit()
@@ -109,11 +83,11 @@ def update_plant_in_collection(plant_collection):
 			connector.close()
 
 def delete_plant_from_collection(user_id, plant_id):
-	connector = get_connector()
-	cursor = connector.cursor()
 	try:
 		sql = "DELETE FROM plant_collection WHERE user_id = %s AND plant_id = %s"
 		val = (user_id, plant_id)
+		connector = get_connector()
+		cursor = connector.cursor()
 		cursor.execute(sql, val)
 		connector.commit()
 		cursor.close()
@@ -121,29 +95,8 @@ def delete_plant_from_collection(user_id, plant_id):
 	except Exception:
 		return False
 	finally:
-		if cursor:
-			cursor.close()
 		if connector:
 			connector.close()
 
-def create_plant_collection(plants_rec):
-    try:
-        db_connection = get_connector()
-        cur = db_connection.cursor()
-        query = """INSERT INTO plant_collection ({}) VALUES (%s, %s, %s, %s)""".format(', '.join(plants_rec.keys()))
-        values = (plants_rec['user_id'],plants_rec['plant_id'], plants_rec['last_care'],plants_rec['upcoming_care'])
-        cur.execute(query,values)
-        db_connection.commit()  # VERY IMPORTANT, otherwise, rows would not be added or reflected in the DB!
-        cur.close()
-
-    except Exception:
-        raise DbConnectionError("Failed to read data from DB")
-
-    finally:
-        if db_connection:
-            db_connection.close()
-            print("DB connection is closed")
-
-    print("Record added to DB")
 
 

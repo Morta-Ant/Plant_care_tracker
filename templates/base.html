@@ -26,26 +26,27 @@
       </div>
 
       <!-- Navigation bar at the top -->
-      {% if session["loggedin"] == True %}
+      {% if session["loggedin"] %}
       <nav>
         <a href="/">Index</a>
         <a href="/plants">All Plants</a>
         <a href="/collection">Collection</a>
         <a href="/logout">Logout</a>
+        {% if error %}
+        <div class="alert alert-danger">
+           {{error}}
+        </div>
+      {% endif %}
      </nav>
 
     {% else %}
 
     <nav>
-      {% if error%}
-      <p>{{error}}</p>
-      {% else %}
       <a href="/">Index</a>
       <a href="/plants">All Plants</a>
       <a href="/collection">Collection</a>
       <a href="/signup">Sign Up</a>
       <a href="/login">Login</a>
-      {% endif %}
 
       {% if error %}
         <div class="alert alert-danger">
