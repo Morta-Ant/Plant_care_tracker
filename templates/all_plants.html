@@ -18,11 +18,15 @@
       <a href="/plants/{{ plant['plant_id'] }}"> {{ plant['common_name'] }} </a>
       <br />
       <p class="sc_name">{{ plant['scientific_name'] }}</p>
+      {% if plant['plant_id'] in collection_plant_ids %}
+      <p class="in_collection">In your collection</p>
+      {% else %}
       <form action="/add_to_collection" method="POST">
         <input type="hidden" name="plant_id" value="{{ plant['plant_id'] }}" />
 
         <input type="submit" class="bttn" value="Add to Collection" />
       </form>
+      {% endif %}
     </div>
     {% endfor %}
   </div>

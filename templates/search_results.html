@@ -17,11 +17,16 @@
     <a href="/plants/{{ result['plant_id'] }}"> {{ result['common_name'] }} </a>
     <br />
     <p class="sc_name">{{ result['scientific_name'] }}</p>
-    <form action="/add_to_collection" method="POST">
-      <input type="hidden" name="plant_id" value="{{ result['plant_id'] }}" />
 
-      <input type="submit" class="bttn" value="Add to Collection" />
-    </form>
+    {% if result['plant_id'] in collection_plant_ids %}
+      <p class="in_collection">In your collection</p>
+      {% else %}
+      <form action="/add_to_collection" method="POST">
+        <input type="hidden" name="plant_id" value="{{ result['plant_id'] }}" />
+
+        <input type="submit" class="bttn" value="Add to Collection" />
+      </form>
+      {% endif %}
   </div>
   {% endfor %}
 </div>

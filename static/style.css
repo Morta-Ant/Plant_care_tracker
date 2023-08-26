@@ -124,6 +124,11 @@ p {
   max-width: fit-content;
   padding-left: 50px;
 }
+
+.in_collection{
+  font-size: medium;
+  color: #3a8f6fde;
+}
 /*Single Plant pages*/
 
 .plant {
