@@ -7,7 +7,7 @@ from database.crud_users import create_user, get_user_by_email, get_user_emails
 from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
 from database.crud_plant_collection import add_plant_to_collection,get_plants_data_in_user_collection,add_plant_to_collection, get_user_collection,update_plant_in_collection, delete_plant_from_collection, get_plant_in_collection_by_ids
 from utils.weather import WeatherInfo, DaylightInfo, get_weather_data
-from utils.get_next_care_date import is_next_care_date_up_to_date, get_next_care_date
+from utils.care_dates import is_next_care_date_up_to_date, get_next_care_date
 
 
 app = Flask(__name__)

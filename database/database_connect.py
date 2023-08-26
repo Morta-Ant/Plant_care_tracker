@@ -5,8 +5,7 @@ class DbConnectionError(Exception):
     pass
 
 def get_connector():
-    # Code to connect to a mysql database, uses the auth details
-    # in config.py
+    # Code to connect to a mysql database, uses the auth details in config.py
     connectDB = mysql.connector.connect(
         user=USER,
         password=PASSWORD,
