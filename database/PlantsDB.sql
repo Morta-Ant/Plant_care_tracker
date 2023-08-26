@@ -5,7 +5,7 @@ CREATE TABLE users (
   user_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
   firstname VARCHAR(255) NOT NULL,
   lastname VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
   passwd VARCHAR(255) NOT NULL
 );
 
@@ -46,4 +46,9 @@ SELECT
         WHERE pc.user_id = u.user_id
     ) AS plants
 FROM users u;
+
+use plantsDB;
+select * from plant_collection;
+UPDATE plant_collection SET last_care = "2023-08-01", upcoming_care = "2023-08-15" WHERE user_id = 1 AND plant_id = 2;
+UPDATE plant_collection SET last_care = "2023-08-15", upcoming_care = "2023-08-21" WHERE user_id = 1 AND plant_id = 9;
 

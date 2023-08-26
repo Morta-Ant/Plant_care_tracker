@@ -118,4 +118,22 @@ def delete_user(id):
 		if connector:
 			connector.close()
 
+def get_user_emails():
+	connector = get_connector()
+	cursor = connector.cursor()
+	try:
+		sql = "SELECT email FROM users"
+		cursor.execute(sql)
+		result = cursor.fetchall()
+		cursor.close()
+		result = [t[0] for t in result] #unpacking tuple to get a list of emails
+		return result
+
+	except Exception:
+		raise DbConnectionError("Failed to read data from DB")
+	finally:
+		if connector:
+			connector.close()
+
+
 
