@@ -5,7 +5,7 @@ from database.database_connect import DbConnectionError
 from database.crud_users import create_user
 from database.config import SECRET_KEY
 from database.crud_plants import get_all_plants, get_plant_by_id, get_plant_by_name
-from database.crud_plant_collection import add_plant_to_collection,get_plants_data_in_user_collection,add_plant_to_collection, get_user_collection,update_plant_in_collection, delete_plant_from_collection
+from database.crud_plant_collection import add_plant_to_collection,get_plants_data_in_user_collection,add_plant_to_collection, get_user_collection,update_plant_in_collection, delete_plant_from_collection, get_plant_collection_by_ids
 from flask_login import LoginManager
 from utils.weather import WeatherInfo, DaylightInfo, get_weather_data
 from utils.get_next_care_date import is_next_care_date_up_to_date, get_next_care_date
@@ -40,9 +40,15 @@ def plants():
 @app.route("/plants/<int:id>")
 def one_plant(id):
     try:
-        plant_data = get_plant_by_id(id)  # Call your function to get plant data from the database
+        upcoming_care = None
+        if "loggedin" in session:
+            collection_entry =  get_plant_collection_by_ids(session["id"], id)
+            if collection_entry is not None:
+                upcoming_care = collection_entry["upcoming_care"]
+
+        plant_data = get_plant_by_id(id)
         if plant_data:
-            return render_template("one_plant.html", **plant_data)
+            return render_template("one_plant.html", **plant_data, upcoming_care = upcoming_care)
         else:
             return "Plant not found"
     except Exception as e:

@@ -12,6 +12,9 @@
     <li>Growth rate: {{ growth_rate }}</li>
     <li>Watering frequecy: Every {{ watering_frequency }} days</li>
     <li>Light requirement: {{ light_level }}</li>
+    {% if upcoming_care != None %}
+    <p> Next watering: {{upcoming_care.strftime('%Y-%m-%d')}}</p>
+    {% endif %}
 </div>
 </div>
 
