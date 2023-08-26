@@ -92,15 +92,12 @@ PASSWORD = "Your Database Password"
 
 Make sure you are in the *Plant_Care_tracker* directory and run the following commands :
 
-1. To run the server with API routes
-```shell
-$ python plant-care-api.py 
-```
-2. To run the server that renders the HTML webpages
+
+1. To run the server that renders the HTML webpages
 ```shell
 $ python plant.py 
 ```
-3. Sign up by registering an account on the web app<br/>
+2. Sign up by registering an account on the web app<br/>
 
 
-Thank you for using PLant Care Tracker to keep your plants growing and flourishing! 🪴
+Thank you for using Plant Care Tracker to keep your plants growing and flourishing! 🪴
