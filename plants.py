@@ -29,8 +29,6 @@ def plants():
             collection_plant_ids = [plant["plant_id"] for plant in user_collection]
 
         plant_data = get_all_plants()
-        print(plant_data)
-        print(collection_plant_ids)
         return render_template("all_plants.html", data=plant_data, collection_plant_ids=collection_plant_ids)
     except Exception as e:
         return f"Oops! Something went wrong: {e}"
@@ -92,22 +90,21 @@ def signup():
             error = 'Password must not be blank and should contain at least 6 characters'
         elif password != password2:
             error = 'Passwords must match'
-        else:
-            if email in get_user_emails():
+        elif email in get_user_emails():
                 error = "User with this email already exists"
-            else:    
-                user = {
-                'firstname': firstname,
-                'lastname': lastname,
-                'email': email,
-                'passwd': password
-                }
+        else:    
+            user = {
+            'firstname': firstname,
+            'lastname': lastname,
+            'email': email,
+            'passwd': password
+            }
 
-                try:
-                    create_user(user)
-                    success_msg = 'You have successfully registered!'
-                except Exception as e:
-                            error =  f"Failed to register: {e}"
+            try:
+                create_user(user)
+                success_msg = 'You have successfully registered!'
+            except Exception as e:
+                        error =  f"Failed to register: {e}"
 
     return render_template('signup.html', msg=success_msg, error=error)
 
@@ -219,44 +216,15 @@ def remove_from_collection():
         return f"failed to remove from collection: {e}"
 
 
-#currently search searches the json file, should pull from database via plant-care-api
-def search_data(query):
-    results = []
-    with open("database/plant_care_data.json") as plant_data:
-        data = json.load(plant_data)
-    for item in data:
-        # Convert all string values in the dictionary to lowercase and check for the query.
-        if any(str(value).lower().count(query.lower()) > 0 for value in item.values()):
-            results.append(item)
-    return results
-
-@app.route("/add_test_data", methods=["GET"])
-def add_test_data():
-    test_plant_collection = {
-        "user_id": 1,
-        "plant_id": 9,
-        "last_care": "2023-08-16",
-        "upcoming_care": "2023-08-23"
-    }
-    try:
-        created_collection = add_plant_to_collection(test_plant_collection)
-        if created_collection:
-            return "Test data added to collection"
-        else:
-            return "Failed to add test data to collection"
-    except Exception as e:
-        return f"Failed to add test data to collection: {e}"
-
 #get weather info
 @app.route("/weather", methods=["POST"])
 def weather_app():
     try:
-        if request.method == "POST":
-            city = request.form["city"]
-            weather_data = get_weather_data(city)
-            weather_info = WeatherInfo(weather_data)
-            daylight_info = DaylightInfo(weather_data)
-            return render_template("weather_results.html", city = city, weather_info = weather_info, daylight_info = daylight_info)
+        city = request.form["city"]
+        weather_data = get_weather_data(city)
+        weather_info = WeatherInfo(weather_data)
+        daylight_info = DaylightInfo(weather_data)
+        return render_template("weather_results.html", city = city, weather_info = weather_info, daylight_info = daylight_info)
     except Exception as e:
         return f"Failed to retrieve the data: {e}"
 
