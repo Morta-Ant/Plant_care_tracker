@@ -90,7 +90,7 @@ PASSWORD = "Your Database Password"
 
 4. Config OpenWeather API key 
 
-In `database/config.py`, replace "SECRET_KEY" with your own OpenWeather API Key :
+In `database/config.py`, replace "API_KEY" with your own OpenWeather API Key :
 
 ```shell
 API_KEY = "Your API Key"
