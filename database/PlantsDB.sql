@@ -33,22 +33,6 @@ CREATE TABLE plant_collection (
 ALTER TABLE plant_collection ADD FOREIGN KEY (plant_id) REFERENCES plants (plant_id);
 ALTER TABLE plant_collection ADD FOREIGN KEY (user_id) REFERENCES users (user_id);
 
-CREATE UNIQUE INDEX idx_user_email ON users (email);
 
--- To display the plant collection of each user as well as upcoming care action.
-SELECT 
-    u.user_id, 
-    u.email,
-    (
-        SELECT CONCAT('[', GROUP_CONCAT(JSON_OBJECT('common_name', p.common_name, 'upcoming_care', pc.upcoming_care)), ']')
-        FROM plant_collection pc INNER JOIN
-        plants p ON pc.plant_id = p.plant_id
-        WHERE pc.user_id = u.user_id
-    ) AS plants
-FROM users u;
 
-use plantsDB;
-select * from plant_collection;
-UPDATE plant_collection SET last_care = "2023-08-01", upcoming_care = "2023-08-15" WHERE user_id = 1 AND plant_id = 2;
-UPDATE plant_collection SET last_care = "2023-08-15", upcoming_care = "2023-08-21" WHERE user_id = 1 AND plant_id = 9;
 
