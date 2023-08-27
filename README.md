@@ -21,7 +21,7 @@ The next care date will be automatically populated based on user's input of the 
 
 <img src="./screenshots/all-plants-page.png" alt="all-plants-page" title="All Plants Page">
 
-[click here](./screenshots) to see more images of the Plant Care Tracker application.
+[Click here](./screenshots) to see more images of the Plant Care Tracker application.
 
 ## The Team
 
@@ -89,7 +89,10 @@ PASSWORD = "Your Database Password"
 ```
 
 3. Run `json_data_handler.py` to add the plants data to the plant table in MySQL <br/>
-
+Make sure you are in the *Plant_Care_tracker* directory and run the following command:
+```shell
+$ python json_data_handler.py
+```
 
 4. Config OpenWeather API key 
 
