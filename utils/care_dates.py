@@ -10,7 +10,7 @@ def get_next_care_date(last_care_date, care_frequency):
         return next_care_date
     
     except TypeError:
-        print("Incorrent input, must be daytime object and an int")
+        print("Incorrect input, must be daytime object and an int")
         return None
     
     except Exception as error:

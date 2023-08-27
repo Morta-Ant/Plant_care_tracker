@@ -72,7 +72,7 @@ To activate this project's virtualenv, run the following command:
 pipenv shell
 ```
 
-## Database setup
+## Config and Database setup
 
 1. Set up database
 
@@ -80,27 +80,33 @@ Navigate to `database/PlantsDB.sql` and run the script in MySQL workbench to set
 
 2. Config Database password 
 
-Go to `database/config.py`, replace "password" with your own database password :
+Go to `database/config.py`, replace "PASSWORD" with your own database password :
 ```shell
 PASSWORD = "Your Database Password"
 ```
 
-3. Run `json_data_handler.py` to add the plants data to the plant table in MySQL
+3. Run `json_data_handler.py` to add the plants data to the plant table in MySQL <br/>
 
+
+4. Config OpenWeather API key 
+
+In `database/config.py`, replace "API_KEY" with your own OpenWeather API Key :
+
+```shell
+API_KEY = "Your API Key"
+```
+Refer to this [guide](https://www.educative.io/answers/how-to-get-the-openweather-api-key) on how to get your own OpenWeather API Key
 
 ## How to run the app
 
 Make sure you are in the *Plant_Care_tracker* directory and run the following commands :
 
-1. To run the server with API routes
-```shell
-$ python plant-care-api.py 
-```
-2. To run the server that renders the HTML webpages
+
+1. To run the server that renders the HTML webpages
 ```shell
 $ python plant.py 
 ```
-3. Sign up by registering an account on the web app<br/>
+2. Sign up by registering an account on the web app<br/>
 
 
-Thank you for using PLant Care Tracker to keep your plants growing and flourishing! 🪴
+Thank you for using Plant Care Tracker to keep your plants growing and flourishing! 🪴

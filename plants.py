@@ -108,32 +108,32 @@ def signup():
 
     return render_template('signup.html', msg=success_msg, error=error)
 
-
 #login
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     error = None
-    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+    if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        user = get_user_by_email(email)
-        if user is not None:
-          passwordDB = user['passwd']
-          is_password_correct = bcrypt.checkpw(password.encode("utf-8"), passwordDB.encode("utf-8"))
-          if is_password_correct:
-             session['loggedin'] = True
-             session['id'] = user['user_id']
-            # session['user_id'] = user[email]['user_id']
-             session['email'] = user['email']
-             session['firstname']=user['firstname']
-             return redirect(url_for('collection'))
-          else:
-                error = 'Incorrect username or password, Please try again!'
+        if not email or not password:
+            error = 'Email and password are required fields.'
         else:
-            error = 'User not found!'
-
-    return render_template("login.html", error=error)
-
+            user = get_user_by_email(email)
+            if user is not None:
+                passwordDB = user['passwd']
+                is_password_correct = bcrypt.checkpw(password.encode("utf-8"), passwordDB.encode("utf-8"))
+                if is_password_correct:
+                    session['loggedin'] = True
+                    session['id'] = user['user_id']
+                    session['email'] = user['email']
+                    session['firstname']=user['firstname']
+                    return redirect(url_for('collection'))
+                else:
+                    error = 'Incorrect username or password, Please try again!'
+            else:
+                 error ='User not found!'
+    return render_template("login.html",error=error)
+        
 #logout
 @app.route("/logout")
 def logout():
@@ -142,8 +142,7 @@ def logout():
     session.pop('email', None)
     return redirect(url_for('index'))
 
-
-
+#collection 
 @app.route("/collection")
 def collection():
     if "loggedin" in session:
@@ -162,7 +161,6 @@ def collection():
                     update_plant_in_collection(updated_collection_entry)
 
             user_plants = get_plants_data_in_user_collection(session["id"])
-            print(user_plants)
             return render_template("collection.html", data = user_plants)
         except Exception as e:
             return f"Oops! Something went wrong: {e}"
@@ -200,7 +198,6 @@ def add_to_collection():
         # Call the create_plant_collection function to insert the record into the database
         add_plant_to_collection(plant_collection)
         return redirect(url_for('plants'))  # Redirect to the collection page
-
     except Exception as e:
         return f"Failed to add plant to collection: {e}"
     

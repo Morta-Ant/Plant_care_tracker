@@ -9,6 +9,7 @@ requests = "*"
 mysql-connector-python = "*"
 bcrypt = "*"
 flask-login = "*"
+bs4 = "*"
 
 [dev-packages]
 
