@@ -104,7 +104,7 @@ Make sure you are in the *Plant_Care_tracker* directory and run the following co
 
 1. To run the server that renders the HTML webpages
 ```shell
-$ python plant.py 
+$ python plants.py 
 ```
 2. Sign up by registering an account on the web app<br/>
 
