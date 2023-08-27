@@ -21,7 +21,7 @@ The next care date will be automatically populated based on user's input of the 
 
 <img src="./screenshots/all-plants-page.png" alt="all-plants-page" title="All Plants Page">
 
-[click here](./screenshots) to see more images of the Plant Care Tracker application.
+[Click here](./screenshots) to see more images of the Plant Care Tracker application.
 
 ## The Team
 
