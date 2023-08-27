@@ -18,8 +18,6 @@ login_manager = LoginManager
 @app.route("/")
 def index():
     return render_template("home.html")
-
-
 @app.route("/plants")
 def plants():
     try:
@@ -51,7 +49,7 @@ def search():
         return render_template('search_results.html', results=results)
     else:
         return "Invalid request method. Please use the search bar to submit a query."
-    
+
 #registration
 @app.route("/signup", methods=["GET","POST"])
 def signup():
@@ -82,46 +80,43 @@ def signup():
                 'email': email,
                 'passwd': password
             }
-
             try:
                 create_user(user)
                 success_msg = 'You have successfully registered!'
             except DbConnectionError:
                 error = 'Failed to register due to a database connection error'
-
+   
     return render_template('signup.html', error=error, msg=success_msg)
 
-
 #login
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     error = None
-    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+    if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        user = get_user_by_email(email)
-        # user format: (1, 'Name', 'Surname', 'email@email.com', '$2b$12$ewLJwOyJmENA3qyDBjchBe.Ceq9jJNNVGxC..uMPFrvhX7mBdZzHm')
-        if user is not None:  # Check if user exists
-          passwordDB = user['passwd']
-          is_password_correct = bcrypt.checkpw(password.encode("utf-8"), passwordDB.encode("utf-8"))
-          if is_password_correct:
-             session['loggedin'] = True
-             session['id'] = user['user_id']
-            # session['user_id'] = user[email]['user_id']
-             session['email'] = user['email']
-             session['firstname']=user['firstname']
-             success_msg="You are now logged in"
-
-             return redirect(url_for('collection'),success_msg)
-
-        
-
-          else:
-                error = 'Incorrect username or password, Please try again!'
+         # Check if either the email or password field is blank
+        if not email or not password:
+            error = 'Email and password are required fields.'
         else:
-            error = 'User not found!'
+            user = get_user_by_email(email)
 
-    return render_template("login.html", error=error)
+            if user is not None:  # Check if user exists
+               passwordDB = user['passwd']
+               is_password_correct = bcrypt.checkpw(password.encode("utf-8"), passwordDB.encode("utf-8"))
+               if is_password_correct:
+                    session['loggedin'] = True
+                    session['id'] = user['user_id']
+                    session['email'] = user['email']
+                    session['firstname']=user['firstname']
+                    success_msg="You are now logged in"
+                    return redirect(url_for('collection'),success_msg)
+               else:
+                  error ='Incorrect username or password, Please try again!'
+            else:
+                  error ='User not found!'
+    return render_template("login.html",error=error)
+   
 
 #logout
 @app.route("/logout")
@@ -166,15 +161,9 @@ def plants():
         plant_data = get_all_plants()  # Call your function to get plant data from the database
         return render_template("all_plants.html", data=plant_data)
     except Exception as e:
+       
         return f"Oops! Something went wrong: {e}"
 
-#collection There are ARE TWO COLLECTION FUNCTIONS
-# @app.route("/collection")
-# def collection():
-#     if "loggedin" in session:
-#         user_plants = get_plants_in_user_collection(session["id"])
-#         return render_template("collection.html", data = user_plants)
-#     return redirect(url_for("login"))
 
 @app.route("/add_to_collection", methods=["POST"])
 def add_to_collection():
@@ -192,34 +181,27 @@ def add_to_collection():
         if plant_id is None:
             return "Invalid request"
 
+        else:
         # Create a plant_collection dictionary
-        plant_collection = {
+           plant_collection = {
             "user_id": user_id,
             "plant_id": plant_id,
             "last_care": datetime.now(),  # Set this to the current datetime
             "upcoming_care": datetime.now() + timedelta(days=7),  # Set this to the current datetime plus 7 days
-        }
+            }
 
-
-        # Call the create_plant_collection function to insert the record into the database
-        created_collection = create_plant_collection(plant_collection)
-
-
-        if created_collection:
-            return redirect(url_for('collection'))  # Redirect to the collection page
-        else:
-            return "Failed to add plant to collection"
-
+        try:
+                create_plant_collection(plant_collection)
+        except DbConnectionError:
+                error = 'Failed to register due to a database connection error'
     except Exception as e:
-        return f"Failed to add plant to collection: {e}"
+        flash(f"Failed to add plant to collection: {str(e)}", "error")
+
+    return redirect(url_for('collection'))
+ 
+       
 
 
-# #user collection
-# @app.route("/<user>/collection")
-# def user_collection():
-#     pass
-
-#individual plant within user's collection
 @app.route("/<user>/collection/<id>")
 def user_plant(id):
     pass
