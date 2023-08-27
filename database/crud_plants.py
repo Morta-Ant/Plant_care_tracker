@@ -68,5 +68,21 @@ def create_plant(plant):
 	finally:
 		if connector:
 			connector.close()
-			
- 
+
+def delete_plant(id):
+	connector = get_connector()
+	cursor = connector.cursor()
+	try:
+		sql = "DELETE FROM plants WHERE plant_id = %s"
+		val = (id, )
+		cursor.execute(sql, val)
+		connector.commit()
+		cursor.close()
+		return True
+	except Exception:
+		return False
+	finally:
+		if cursor:
+			cursor.close()
+		if connector:
+			connector.close()
