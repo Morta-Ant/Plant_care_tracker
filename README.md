@@ -19,7 +19,7 @@ It provides a platform to empower users with knowledge, tools, and resources to 
 User can sign up and log in to the plant care tracker web app, add plants they own to their collection and track the next care date. 
 The next care date will be automatically populated based on user's input of the last care date.
 
-<img src="./screenshots/all-plants-page.png" alt="all-plants-page" title="Optional title">
+<img src="./screenshots/all-plants-page.png" alt="all-plants-page" title="All Plants Page">
 
 [click here](./screenshots) to see more images of the Plant Care Tracker application.
 
