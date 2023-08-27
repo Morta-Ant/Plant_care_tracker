@@ -37,7 +37,6 @@ def create_user(user):
 		if connector:
 			connector.close()
 			
-
 def get_user_emails():
 	connector = get_connector()
 	cursor = connector.cursor()
@@ -52,5 +51,39 @@ def get_user_emails():
 	except Exception:
 		raise DbConnectionError("Failed to read data from DB")
 	finally:
+		if connector:
+			connector.close()
+
+def get_user_by_id(id):
+	try:
+		sql = "SELECT * FROM users WHERE user_id = %s LIMIT 1"
+		val = (id, )
+		connector = get_connector()
+		cursor = connector.cursor(dictionary=True)
+		cursor.execute(sql, val)
+		result = cursor.fetchone()
+		cursor.close()
+		return result
+	except Exception:
+		raise DbConnectionError("Failed to read data from DB")
+	finally:
+		if connector:
+			connector.close()
+
+def delete_user(id):
+	connector = get_connector()
+	cursor = connector.cursor()
+	try:
+		sql = "DELETE FROM users WHERE user_id = %s"
+		val = (id, )
+		cursor.execute(sql, val)
+		connector.commit()
+		cursor.close()
+		return True
+	except Exception:
+		return False
+	finally:
+		if cursor:
+			cursor.close()
 		if connector:
 			connector.close()
