@@ -50,8 +50,6 @@ class WeatherInfo:
         self.type = response["weather"][0]["main"]
         self.details = response["weather"][0]["description"]
         self.temp = response["main"]["temp"]
-        self.temp_min = response["main"]["temp_min"]
-        self.temp_max = response["main"]["temp_max"]
         self.humidity = response["main"]["humidity"]
 
     
