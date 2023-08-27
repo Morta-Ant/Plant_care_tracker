@@ -17,7 +17,7 @@ class TestGetNextCareDateFunction(TestCase):
     def test_invalid_input(self):
         last_care_date = '2023-05-25 12:30:00'
         care_frequency = "7"
-        expected_error_message = "Incorrent input, must be daytime object and an int"
+        expected_error_message = "Incorrect input, must be daytime object and an int"
 
         with patch('builtins.print') as mock_print:
             result = get_next_care_date(last_care_date, care_frequency)
@@ -29,7 +29,7 @@ class TestGetNextCareDateFunction(TestCase):
     
     def test_no_last_care_date_provided(self):
         care_frequency = 4
-        expected_error_message = "Incorrent input, must be daytime object and an int"
+        expected_error_message = "Incorrect input, must be daytime object and an int"
 
         with patch('builtins.print') as mock_print:
             result = get_next_care_date(None, care_frequency)
