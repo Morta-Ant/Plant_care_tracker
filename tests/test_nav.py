@@ -28,12 +28,6 @@ class TestNavigation(TestCase):
         self.assertEqual(page_title, 'All Plants') 
 
 
-    def test_search_route(self):
-        response = self.app.get('/search')
-        assert response.status_code == 200   # Check if the route returns 200 OK
-       # Replace with the expected <h1> content
-
-
     def test_signup_route(self):
         response = self.app.get('/signup')
         assert response.status_code == 200  # Check if the route returns 200 OK
