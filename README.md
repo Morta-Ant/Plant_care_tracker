@@ -93,7 +93,7 @@ PASSWORD = "Your Database Password"
 In `database/config.py`, replace "SECRET_KEY" with your own OpenWeather API Key :
 
 ```shell
-SECRET_KEY = "Your API Key"
+API_KEY = "Your API Key"
 ```
 Refer to this [guide](https://www.educative.io/answers/how-to-get-the-openweather-api-key) on how to get your own OpenWeather API Key
 
