@@ -89,7 +89,10 @@ PASSWORD = "Your Database Password"
 ```
 
 3. Run `json_data_handler.py` to add the plants data to the plant table in MySQL <br/>
-
+Make sure you are in the *Plant_Care_tracker* directory and run the following command:
+```shell
+$ python json_data_handler.py
+```
 
 4. Config OpenWeather API key 
 
