@@ -88,7 +88,7 @@ PASSWORD = "Your Database Password"
 3. Run `json_data_handler.py` to add the plants data to the plant table in MySQL <br/>
 
 
-4. OpenWeatherAPI key 
+4. Config OpenWeather API key 
 
 In `database/config.py`, replace "SECRET_KEY" with your own OpenWeather API Key :
 
