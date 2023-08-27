@@ -1,28 +1,35 @@
-{% extends "base.html" %}
-{% block title %}Search Results{% endblock %}
-
-
+{% extends "base.html" %} 
+{% block title %}Search Results{% endblock %} 
 {% block content %}
-    <h1>Search Results</h1>
-    {% if results %}
-        <ul>
-            {% for result in results %}
-                <li>
-                    <h2>{{ result['common_name'] }}</h2>
-                    <p>Scientific Name: {{ result['scientific_name'] }}</p>
-                    <p>Other Name: {{ result['other_name'] }}</p>
-                    <p>Light Level: {{ result['light_level'] }}</p>
-                    <p>Watering Frequency: {{ result['watering_frequency'] }}</p>
-                    <p>Growth Rate: {{ result['growth_rate'] }}</p>
-                    <p>Maintenance Level: {{ result['maintenance_level'] }}</p>
-                    <p>Plant Description: {{ result['plant_description'] }}</p>
-                    <!-- Add more fields here as needed -->
-                    <img src="{{ result['image'] }}" alt="{{ result['common_name'] }}">
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No results found.</p>
-    {% endif %}
-{% endblock %}
+<h1>Find Your Plant!</h1>
+<div class="plants_form">
+  <form action="/search" method="post">
+    <input class = "plants_input" type="text" name="search_query" placeholder="Enter search query" />
+    <input type="submit" value="Search" />
+  </form>
+</div>
+<h1>Search Results</h1>
+{% if results %}
+<div class="grid-container">
+  {% for result in results %}
+  <div class="thumbnail">
+    <img src="{{ result['image'] }}" class="image" /> <br />
+    <a href="/plants/{{ result['plant_id'] }}"> {{ result['common_name'] }} </a>
+    <br />
+    <p class="sc_name">{{ result['scientific_name'] }}</p>
 
+    {% if result['plant_id'] in collection_plant_ids %}
+      <p class="in_collection">In your collection</p>
+      {% else %}
+      <form action="/add_to_collection" method="POST">
+        <input type="hidden" name="plant_id" value="{{ result['plant_id'] }}" />
+
+        <input type="submit" class="bttn" value="Add to Collection" />
+      </form>
+      {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p>No results found.</p>
+{% endif %} {% endblock %}

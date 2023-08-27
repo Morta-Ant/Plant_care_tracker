@@ -1,14 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Collection{% endblock %}
 {% block content %}
+
     <div class="grid-container">
         {% for plant in data %}
         <div class="thumbnail">
           <img src="{{plant['image']}}" class = "image"/> <br>
         <a href="/plants/{{plant['plant_id']}}"> {{plant["common_name"]}} </a> <br>
-        <p>{{plant['scientific_name']}} <br>
-            Next Care Action: {{plant["upcoming_care"]}}
-        </p>
+        <p class = "sc_name">{{plant['scientific_name']}} </p>
+        <p> Next watering: {{plant["upcoming_care"].strftime('%Y-%m-%d')}} </p>
+        <form action="/remove_from_collection" method="POST">
+            <input type="hidden" name="plant_id" value="{{ plant['plant_id'] }}" />
+    
+            <input type="submit" class="bttn" value="Remove from collection" />
+          </form>
         </div>
         {% endfor %}
     </div>

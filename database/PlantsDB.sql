@@ -5,7 +5,7 @@ CREATE TABLE users (
   user_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
   firstname VARCHAR(255) NOT NULL,
   lastname VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
   passwd VARCHAR(255) NOT NULL
 );
 
@@ -33,6 +33,8 @@ CREATE TABLE plant_collection (
 ALTER TABLE plant_collection ADD FOREIGN KEY (plant_id) REFERENCES plants (plant_id);
 ALTER TABLE plant_collection ADD FOREIGN KEY (user_id) REFERENCES users (user_id);
 
+CREATE UNIQUE INDEX idx_user_email ON users (email);
+
 -- To display the plant collection of each user as well as upcoming care action.
 SELECT 
     u.user_id, 
@@ -45,8 +47,8 @@ SELECT
     ) AS plants
 FROM users u;
 
-
-
-
-
+use plantsDB;
+select * from plant_collection;
+UPDATE plant_collection SET last_care = "2023-08-01", upcoming_care = "2023-08-15" WHERE user_id = 1 AND plant_id = 2;
+UPDATE plant_collection SET last_care = "2023-08-15", upcoming_care = "2023-08-21" WHERE user_id = 1 AND plant_id = 9;
 

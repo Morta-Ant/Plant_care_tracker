@@ -1,71 +1,35 @@
-{% extends "base.html" %}
-{% block title %}All Plants{% endblock %}
-{% block style %}
-<style>
-          
-  form {
-     margin: 0 auto;
-     text-align: center;
-     background-color: #eee;
-     padding: 20px;
-     border-radius: 5px;
-   }
-   input[type="text"] {
-     width: 70%;
-     padding: 12px 20px;
-     margin: 8px 0;
-     box-sizing: border-box;
-     border: 2px solid #ccc;
-     border-radius: 4px;
-   }
-   button[type="submit"] {
-     width: 20%;
-     background-color: #B9F6CA;
-     color: white;
-     padding: 14px 20px;
-     margin: 8px 0;
-     border: none;
-     border-radius: 4px;
-     cursor: pointer;
-   }
-   button[type="submit"]:hover {
-     background-color: #008B8B;
-   }
-
-   .grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-}
-
-h1 {
-  text-align: center;
-}
-
-p {
-  font-style: italic;
-  font-size: small;
-}
- </style>
- {% endblock %}
+{% extends "base.html" %} 
+{% block title %}All Plants{% endblock %} 
 
 {% block content %}
-    <h1>Find Your Plant!</h1>
+<h1>Find Your Plant!</h1>
 
-    <div class ="searchbar">
-      <form action="/search" method="post">
-        <input type="text" name="search_query" placeholder="Enter search query">
-        <input type="submit" value="Search">
+<div class="plants_form">
+  <form action="/search" method="post">
+    <input class = "plants_input" type="text" name="search_query" placeholder="Enter search query" />
+    <input type="submit" value="Search" />
+  </form>
+</div>
+<body class="all_plants_page">
+  <div class="grid-container">
+    {% for plant in data %}
+    <div class="thumbnail">
+      <img src="{{ plant['image'] }}" class="image" /> <br />
+      <a href="/plants/{{ plant['plant_id'] }}"> {{ plant['common_name'] }} </a>
+      <br />
+      <p class="sc_name">{{ plant['scientific_name'] }}</p>
+      {% if plant['plant_id'] in collection_plant_ids %}
+      <p class="in_collection">In your collection</p>
+      {% else %}
+      <form action="/add_to_collection" method="POST">
+        <input type="hidden" name="plant_id" value="{{ plant['plant_id'] }}" />
+
+        <input type="submit" class="bttn" value="Add to Collection" />
       </form>
+      {% endif %}
     </div>
-    
-    <div class="grid-container">
-        {% for plant in data %}
-        <div class="thumbnail">
-          <img src="{{plant['image']}}" class = "image"/> <br>
-        <a href="/plants/{{plant['plant_id']}}"> {{plant["common_name"]}} </a> <br>
-        <p>{{plant['scientific_name']}}</p>
-        </div>
-        {% endfor %}
-    </div>
-  
-{% endblock %}
+    {% endfor %}
+  </div>
+
+  {% endblock %}
+</body>
