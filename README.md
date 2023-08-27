@@ -16,7 +16,7 @@ Team project for CFGdegree - Software Engineering (summer 2023)
 Plant Care Tracker is a website that allows users to care for their plants. 
 It provides a platform to empower users with knowledge, tools, and resources to care for their plants.
  
-User can sign up and log in to the plant care tracker web app, add plants they own to their collection and track the next care date. 
+Users can sign up and log in to the plant care tracker web app, add plants they own to their collection and track the next care date. 
 The next care date will be automatically populated based on user's input of the last care date.
 
 <img src="./screenshots/all-plants-page.png" alt="all-plants-page" title="All Plants Page">
